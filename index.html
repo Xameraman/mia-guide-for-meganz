@@ -98,7 +98,7 @@ body {
 .hero h1 {
   font-family:'Press Start 2P',monospace;
   font-size:clamp(13px,3.2vw,22px);
-  color:#fff;text-shadow:3px 3px 0 #000,0 0 30px rgba(255,215,0,0.15);
+  color:#fff;text-shadow:3px 3px 0 #000,0 0 30px rgba(255,255,255,0.15);
   line-height:1.6; position:relative;z-index:1;
 }
 .hero .badge {
@@ -137,7 +137,6 @@ body {
   font-size:7px; padding:3px 10px; border-radius:4px;
   color:#fff; letter-spacing:1px;
   box-shadow:0 0 12px rgba(93,158,49,0.6);
-  /* background is set dynamically via JS */
 }
 .step-body { font-size:14px; line-height:1.7; color:#C8D8E0; }
 .step-body strong { color:var(--accent); }
@@ -222,6 +221,18 @@ body {
 @media (max-width:600px){
   .top-bar{padding:8px 12px;gap:8px;}
   .top-bar-join{font-size:6px;padding:5px 10px;}
+}
+
+/* ── MOBILE FIX for AI chat bubble ── */
+@media (max-width: 600px) {
+  .chatling-widget,
+  .chtl-chat,
+  #chatling-bubble {
+    max-width: 92vw !important;
+    max-height: 70vh !important;
+    bottom: 10px !important;
+    right: 10px !important;
+  }
 }
 </style>
 </head>
@@ -504,5 +515,9 @@ function changeStep(direction) {
 renderSteps();
 updateUI();
 </script>
+
+<!-- MIA AI Assistant (Chatling - same agent across all MIA guide sites) -->
+<script> window.chtlConfig = { chatbotId: "7411237892" } </script>
+<script async data-id="7411237892" id="chtl-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
 </body>
 </html>
