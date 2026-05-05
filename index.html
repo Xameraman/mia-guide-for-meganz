@@ -563,15 +563,16 @@ renderSteps();
 updateUI();
 </script>
 
-<!-- ══════════════════ MIA WIDGET JS ══════════════════ -->
+<!-- ══════════════════ MIA WIDGET JS (with spam lock) ══════════════════ -->
 <script>
 (function(){
   const API_URL = 'https://xameraman5022-mia-assistant.hf.space/chat';
   const SOURCE  = 'mega-guide'; // MEGA‑specific knowledge
 
-  let history  = [];
-  let isOpen   = false;
-  let isLoading= false;
+  let history    = [];
+  let isOpen     = false;
+  let isLoading  = false;
+  let chatLocked = false;                  // ⛔ spam lock
 
   const btn     = document.getElementById('mia-widget-btn');
   const panel   = document.getElementById('mia-widget-panel');
@@ -597,6 +598,7 @@ updateUI();
   sendBtn.addEventListener('click', sendMessage);
 
   async function sendMessage(){
+    if(chatLocked) return;                 // ⛔ locked
     const text = input.value.trim();
     if(!text || isLoading) return;
     addMessage('user', text);
@@ -613,6 +615,20 @@ updateUI();
       });
       if(!res.ok) throw new Error(`HTTP ${res.status}`);
       const data  = await res.json();
+
+      // ⛔ SPAM LOCK – disable chat permanently until refresh
+      if(data.spam) {
+        chatLocked = true;
+        input.disabled = true;
+        sendBtn.disabled = true;
+        input.placeholder = '⛔ Chat locked – spam detected. Please refresh the page.';
+        document.getElementById('mia-footer-note').textContent = '⚠️ Locked · Refresh to unlock';
+        typing.remove();
+        addMessage('bot', data.response || '⛔ Chatting locked – spam was detected. If you believe this is a mistake, kindly refresh the page.');
+        setLoading(false);
+        return;
+      }
+
       const reply = data.response || 'Sorry, I didn\'t get a response. Please try again.';
       history.push({ role:'assistant', content:reply });
       typing.remove();
