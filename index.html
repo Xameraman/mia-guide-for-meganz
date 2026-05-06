@@ -563,28 +563,45 @@ renderSteps();
 updateUI();
 </script>
 
-<!-- ══════════════════ MIA WIDGET JS (with spam lock) ══════════════════ -->
+<!-- ══════════════════ MIA WIDGET JS (with spam lock + user ID) ══════════════════ -->
 <script>
-(function(){
+(function () {
   const API_URL = 'https://xameraman5022-mia-assistant.hf.space/chat';
   const SOURCE  = 'mega-guide'; // MEGA‑specific knowledge
 
-  let history    = [];
-  let isOpen     = false;
-  let isLoading  = false;
-  let chatLocked = false;                  // ⛔ spam lock
+  // ── Persistent user token ──
+  let token = localStorage.getItem('mia_token');
+  if (!token) {
+    token = crypto.randomUUID();
+    localStorage.setItem('mia_token', token);
+  }
 
-  const btn     = document.getElementById('mia-widget-btn');
-  const panel   = document.getElementById('mia-widget-panel');
-  const msgs    = document.getElementById('mia-messages');
-  const input   = document.getElementById('mia-input');
+  // ── Basic device fingerprint ──
+  const fingerprint =
+    navigator.userAgent +
+    "_" +
+    screen.width +
+    "x" +
+    screen.height +
+    "_" +
+    Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  let history = [];
+  let isOpen = false;
+  let isLoading = false;
+  let chatLocked = false;
+
+  const btn = document.getElementById('mia-widget-btn');
+  const panel = document.getElementById('mia-widget-panel');
+  const msgs = document.getElementById('mia-messages');
+  const input = document.getElementById('mia-input');
   const sendBtn = document.getElementById('mia-send');
 
   btn.addEventListener('click', () => {
     isOpen = !isOpen;
     panel.classList.toggle('mia-open', isOpen);
     btn.textContent = isOpen ? '✕' : '🤖';
-    if(isOpen){ input.focus(); scrollToBottom(); }
+    if (isOpen) { input.focus(); scrollToBottom(); }
   });
 
   input.addEventListener('input', () => {
@@ -593,31 +610,47 @@ updateUI();
   });
 
   input.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
   });
   sendBtn.addEventListener('click', sendMessage);
 
-  async function sendMessage(){
-    if(chatLocked) return;                 // ⛔ locked
+  async function sendMessage() {
+    if (chatLocked) return;
+
     const text = input.value.trim();
-    if(!text || isLoading) return;
+    if (!text || isLoading) return;
+
     addMessage('user', text);
-    history.push({ role:'user', content:text });
+    history.push({ role: 'user', content: text });
     input.value = '';
     input.style.height = 'auto';
+
     const typing = addTyping();
     setLoading(true);
+
     try {
       const res = await fetch(API_URL, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ message:text, history:history.slice(0,-1), source:SOURCE })
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-token': token,
+          'x-user-fp': fingerprint
+        },
+        body: JSON.stringify({
+          message: text,
+          history: history.slice(0, -1),
+          source: SOURCE
+        })
       });
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data  = await res.json();
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
 
       // ⛔ SPAM LOCK – disable chat permanently until refresh
-      if(data.spam) {
+      if (data.spam) {
         chatLocked = true;
         input.disabled = true;
         sendBtn.disabled = true;
@@ -630,33 +663,35 @@ updateUI();
       }
 
       const reply = data.response || 'Sorry, I didn\'t get a response. Please try again.';
-      history.push({ role:'assistant', content:reply });
+      history.push({ role: 'assistant', content: reply });
       typing.remove();
       addMessage('bot', reply);
-    } catch(err){
+
+    } catch (err) {
       typing.remove();
       addMessage('bot', '⚠️ Something went wrong. Please try again in a moment.');
+      console.error(err);
     } finally {
       setLoading(false);
       input.focus();
     }
   }
 
-  function addMessage(role, text){
+  function addMessage(role, text) {
     const div = document.createElement('div');
     div.className = `mia-msg ${role}`;
     div.innerHTML = text
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g,'<em>$1</em>')
-      .replace(/`(.*?)`/g,'<code>$1</code>')
-      .replace(/\n/g,'<br>');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code>$1</code>')
+      .replace(/\n/g, '<br>');
     msgs.appendChild(div);
     scrollToBottom();
     return div;
   }
 
-  function addTyping(){
+  function addTyping() {
     const div = document.createElement('div');
     div.className = 'mia-typing';
     div.innerHTML = '<div class="mia-dot"></div><div class="mia-dot"></div><div class="mia-dot"></div>';
@@ -665,8 +700,13 @@ updateUI();
     return div;
   }
 
-  function scrollToBottom(){ msgs.scrollTop = msgs.scrollHeight; }
-  function setLoading(s){ isLoading=s; input.disabled=s; sendBtn.disabled=s; }
+  function scrollToBottom() { msgs.scrollTop = msgs.scrollHeight; }
+
+  function setLoading(s) {
+    isLoading = s;
+    input.disabled = s;
+    sendBtn.disabled = s;
+  }
 })();
 </script>
 </body>
