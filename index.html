@@ -562,12 +562,11 @@ function changeStep(direction) {
 renderSteps();
 updateUI();
 </script>
-
-<!-- ══════════════════ MIA WIDGET JS (with spam lock + user ID) ══════════════════ -->
+<!-- ══════════════════ MIA WIDGET JS (full, working) ══════════════════ -->
 <script>
 (function () {
   const API_URL = 'https://xameraman5022-mia-assistant.hf.space/chat';
-  const SOURCE  = 'mega-guide'; // MEGA‑specific knowledge
+  const SOURCE  = 'mega-guide'; // MEGA.nz‑specific knowledge
 
   // ── Persistent user token ──
   let token = localStorage.getItem('mia_token');
@@ -622,6 +621,17 @@ updateUI();
 
     const text = input.value.trim();
     if (!text || isLoading) return;
+
+    // ── Lock if message too long ──
+    if (text.length > 600) {
+      chatLocked = true;
+      input.disabled    = true;
+      sendBtn.disabled  = true;
+      input.placeholder = '⛔ Chat locked – message too long. Refresh to unlock.';
+      document.getElementById('mia-footer-note').textContent = '⚠️ Locked · Refresh to unlock';
+      addMessage('bot', '⛔ **Chat locked** — your message was too long. Please keep messages under 600 characters. Refresh the page to unlock. 🔄');
+      return;
+    }
 
     addMessage('user', text);
     history.push({ role: 'user', content: text });
