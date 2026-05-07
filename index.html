@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Download from MEGA.nz — MIA Guide</title>
+<title>How to Download on CurseForge — MIA Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -12,6 +12,7 @@
   --dark:#080E1A; --panel:#141E2E; --card:#1A2435;
   --light:#F0EBD8; --accent:#FFD700; --warn:#FF6B35;
   --tip:#47C96B; --sand:#F5D67A; --mia:#5D9E31;
+  --bedrock:#47C96B; --java:#C678FF;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -24,10 +25,8 @@ body {
   overflow-x:hidden;
 }
 
-/* ── CANVAS BACKGROUND ── */
 #bg-canvas { position:fixed; top:0;left:0; width:100%;height:100%; z-index:0; pointer-events:none; }
 
-/* ── GROUND ── */
 .ground { position:fixed; bottom:0;left:0;right:0;z-index:1;pointer-events:none; }
 .ground-grass {
   height:20px;
@@ -55,17 +54,8 @@ body {
   box-shadow:0 2px 24px rgba(93,158,49,0.12);
 }
 .top-bar-left{display:flex;align-items:center;gap:10px;}
-.top-bar-logo {
-  width:36px; height:36px; flex-shrink:0;
-  border-radius:8px; object-fit:cover;
-  border:2px solid rgba(93,158,49,0.5);
-  box-shadow:0 0 12px rgba(93,158,49,0.4);
-}
-.top-bar-name {
-  font-family:'Press Start 2P',monospace; font-size:7px;
-  color:var(--accent); letter-spacing:1.5px; line-height:1.7;
-  text-shadow:0 0 10px rgba(255,215,0,0.4); display:block;
-}
+.top-bar-logo { width:36px; height:36px; border-radius:8px; object-fit:cover; border:2px solid rgba(93,158,49,0.5); box-shadow:0 0 12px rgba(93,158,49,0.4); }
+.top-bar-name { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--accent); letter-spacing:1.5px; line-height:1.7; text-shadow:0 0 10px rgba(255,215,0,0.4); display:block; }
 .top-bar-tagline{font-size:10px;color:#6A9A6A;letter-spacing:0.5px;}
 .top-bar-join {
   display:inline-flex; align-items:center; gap:6px;
@@ -75,192 +65,235 @@ body {
   text-decoration:none; letter-spacing:0.5px;
   border:1.5px solid rgba(140,150,255,0.4);
   transition:transform .2s,box-shadow .2s;
-  box-shadow:0 2px 10px rgba(88,101,242,0.35);
-  white-space:nowrap;
+  box-shadow:0 2px 10px rgba(88,101,242,0.35); white-space:nowrap;
 }
 .top-bar-join:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 4px 16px rgba(88,101,242,0.5);}
 .top-bar-join svg{width:14px;height:14px;flex-shrink:0;fill:#fff;}
 
 /* ── HERO ── */
 .hero {
-  background:linear-gradient(180deg,
-    #87CEEB 0%,#5BADD4 36%,
-    #5D9E31 36%,#4A7E26 52%,
-    #8B6340 52%,#6B4C2A 100%);
-  padding:32px 20px 20px; text-align:center;
-  border-bottom:6px solid var(--darkgrass);
-  position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#87CEEB 0%,#5BADD4 36%,#5D9E31 36%,#4A7E26 52%,#8B6340 52%,#6B4C2A 100%);
+  padding:32px 20px 20px; text-align:center; border-bottom:6px solid var(--darkgrass); position:relative;overflow:hidden;
 }
 .hero-clouds{position:absolute;top:0;left:0;right:0;bottom:50%;pointer-events:none;}
 .hcloud{ position:absolute;background:rgba(255,255,255,0.86);border-radius:3px; animation:cloudDrift linear infinite;}
 .hcloud::before{ content:'';position:absolute;background:rgba(255,255,255,0.86);border-radius:3px;width:55%;height:120%;top:-60%;left:14%;box-shadow:26px 0 0 rgba(255,255,255,0.86);}
 @keyframes cloudDrift{from{transform:translateX(-150px)}to{transform:translateX(110vw)}}
-.hero h1 {
-  font-family:'Press Start 2P',monospace;
-  font-size:clamp(13px,3.2vw,22px);
-  color:#fff;text-shadow:3px 3px 0 #000,0 0 30px rgba(255,255,255,0.15);
-  line-height:1.6; position:relative;z-index:1;
-}
-.hero .badge {
-  display:inline-block;background:rgba(0,0,0,0.55);
-  border:2px solid var(--accent);padding:4px 16px;
-  font-family:'Press Start 2P',monospace;font-size:7px;
-  color:var(--accent);letter-spacing:2px;margin-bottom:10px;
-  backdrop-filter:blur(4px);box-shadow:0 0 18px rgba(255,215,0,0.15);
-  position:relative;z-index:1;
-}
+.hero h1 { font-family:'Press Start 2P',monospace; font-size:clamp(13px,3.2vw,22px); color:#fff;text-shadow:3px 3px 0 #000; line-height:1.6; position:relative;z-index:1; }
+.hero .badge { display:inline-block;background:rgba(0,0,0,0.55); border:2px solid var(--accent);padding:4px 16px; font-family:'Press Start 2P',monospace;font-size:7px; color:var(--accent);letter-spacing:2px;margin-bottom:10px; position:relative;z-index:1;box-shadow:0 0 18px rgba(255,215,0,0.15); }
 .hero-sub{ font-size:13px; color:var(--sand); font-weight:700; margin-top:4px; position:relative; z-index:1; }
 
-/* ── WIZARD ── */
+/* ── WRAP ── */
 .wizard-wrap{ max-width:780px; margin: 20px auto 40px; padding: 0 18px; z-index:2; position:relative; }
+
+/* ── CHOICE SCREEN ── */
+.choice-screen{ text-align:center; margin:36px 0 16px; transition: all 0.4s ease; }
+.choice-screen.hidden{ display:none; }
+.choice-title{ font-family:'Press Start 2P',monospace;font-size:9px; color:var(--accent);margin-bottom:24px;letter-spacing:2px; text-shadow:0 0 20px rgba(255,215,0,0.4); }
+.choice-buttons{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;}
+.choice-btn {
+  background:var(--card); border-radius:16px; padding:24px 18px;
+  min-width:220px; max-width:260px; cursor:pointer;
+  transition:all 0.28s; text-align:center; color:#fff;
+  font-family:'Nunito',sans-serif; position:relative; overflow:hidden;
+  border:2px solid rgba(255,255,255,0.12);
+  user-select:none;
+}
+.choice-btn:hover{transform:translateY(-6px);}
+.bedrock-btn { border-color: rgba(71,201,107,0.5); box-shadow:0 6px 30px rgba(71,201,107,0.1); }
+.bedrock-btn:hover{ border-color:rgba(71,201,107,0.8); box-shadow:0 14px 50px rgba(71,201,107,0.25); }
+.java-btn { border-color: rgba(198,120,255,0.5); box-shadow:0 6px 30px rgba(198,120,255,0.1); }
+.java-btn:hover{ border-color:rgba(198,120,255,0.8); box-shadow:0 14px 50px rgba(198,120,255,0.25); }
+.choice-icon{font-size:42px;margin-bottom:10px;}
+.choice-btn h2{font-size:18px;font-weight:900;margin-bottom:6px;}
+.choice-desc{font-size:11px;color:rgba(255,255,255,0.65);line-height:1.4;}
+
+/* ── STEP PANELS ── */
 .step-container {
   background:rgba(20,30,46,0.85); backdrop-filter:blur(12px);
   border-radius:14px; padding:22px 20px; min-height:280px;
-  box-shadow:0 6px 32px rgba(0,0,0,0.4), 0 0 30px rgba(93,158,49,0.12);
+  box-shadow:0 6px 32px rgba(0,0,0,0.4),0 0 30px rgba(93,158,49,0.12);
   border:1px solid rgba(93,158,49,0.2); transition:all 0.4s;
 }
-.step-panel {
-  display:none;
-  padding-left:16px;
-  border-left:3px solid transparent;
-  transition: border-color 0.3s;
-}
+.step-panel { display:none; padding-left:16px; border-left:3px solid transparent; transition:border-color 0.3s; }
 .step-panel.active { display:block; animation:fadeSlide 0.3s ease; }
 @keyframes fadeSlide { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
-.step-title {
-  font-size:18px; font-weight:900; color:#fff; margin-bottom:10px;
-  display:flex; align-items:center; gap:8px;
-}
-.step-num {
-  font-family:'Press Start 2P',monospace;
-  font-size:7px; padding:3px 10px; border-radius:4px;
-  color:#fff; letter-spacing:1px;
-  box-shadow:0 0 12px rgba(93,158,49,0.6);
-}
+.step-title { font-size:18px; font-weight:900; color:#fff; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.step-num { font-family:'Press Start 2P',monospace; font-size:7px; padding:3px 10px; border-radius:4px; color:#fff; letter-spacing:1px; box-shadow:0 0 12px rgba(93,158,49,0.6); }
 .step-body { font-size:14px; line-height:1.7; color:#C8D8E0; }
 .step-body strong { color:var(--accent); }
 
-.callout {
-  display:flex; gap:8px; align-items:flex-start;
-  border-radius:6px; padding:8px 12px; margin-top:10px;
-  font-size:12.5px; line-height:1.6;
-  backdrop-filter:blur(4px);
-}
+.callout { display:flex; gap:8px; align-items:flex-start; border-radius:6px; padding:8px 12px; margin-top:10px; font-size:12.5px; line-height:1.6; backdrop-filter:blur(4px); }
 .callout.tip { background:rgba(71,201,107,0.08); border:1px solid #47C96B; color:#A8F0BC; }
 .callout.warn { background:rgba(255,107,53,0.08); border:1px solid #FF6B35; color:#FFB898; }
 .callout.info { background:rgba(58,143,199,0.08); border:1px solid #3A8FC7; color:#A8D8F8; }
 .callout-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
 
 .callout.mia-callout {
-  background:linear-gradient(135deg, rgba(155,79,219,0.1), rgba(255,105,180,0.08));
-  border:1px solid rgba(198,120,255,0.4);
-  color:#F0C8F0; margin-top:14px;
-  box-shadow:0 0 14px rgba(198,120,255,0.12);
-  padding:10px 14px; font-size:13px; line-height:1.65;
+  background:linear-gradient(135deg,rgba(155,79,219,0.1),rgba(255,105,180,0.08));
+  border:1px solid rgba(198,120,255,0.4); color:#F0C8F0; margin-top:14px;
+  box-shadow:0 0 14px rgba(198,120,255,0.12); padding:10px 14px; font-size:13px; line-height:1.65;
 }
-.callout.mia-callout .callout-icon img {
-  width:18px; height:18px; border-radius:3px; vertical-align:middle;
-}
+.callout.mia-callout .callout-icon img { width:18px;height:18px;border-radius:3px;vertical-align:middle; }
 
 /* ── EXTRA BUTTON ── */
-#stepExtraBtn {
-  display:none; text-align:center; margin:14px 0 0;
-}
+#stepExtraBtn { display:none; text-align:center; margin:14px 0 0; }
 #stepExtraBtn a {
-  display:inline-block;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color:#000; font-weight:900; font-size:14px;
-  padding:11px 26px; border-radius:12px;
-  text-decoration:none; border:2px solid #FF8C00;
-  box-shadow:0 0 22px rgba(255,215,0,0.5);
-  transition:transform 0.2s,box-shadow 0.2s;
+  display:inline-block; background:linear-gradient(135deg,#FFD700,#FFA500);
+  color:#000; font-weight:900; font-size:14px; padding:11px 26px; border-radius:12px;
+  text-decoration:none; border:2px solid #FF8C00; box-shadow:0 0 22px rgba(255,215,0,0.5); transition:transform 0.2s,box-shadow 0.2s;
 }
 #stepExtraBtn a:hover{ transform:translateY(-3px); box-shadow:0 0 32px rgba(255,215,0,0.85); }
 
 /* ── NAVIGATION ── */
 .progress-bar { width:100%; height:4px; background:rgba(255,255,255,0.07); border-radius:3px; margin-bottom:6px; }
-.progress-fill { height:100%; background:linear-gradient(90deg, var(--grass), var(--accent)); border-radius:3px; transition:width 0.3s; box-shadow:0 0 8px rgba(93,158,49,0.5); }
-.nav-row {
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px; margin-top:14px; flex-wrap:wrap;
-}
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--grass),var(--accent)); border-radius:3px; transition:width 0.3s; box-shadow:0 0 8px rgba(93,158,49,0.5); }
+.nav-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; flex-wrap:wrap; }
 .nav-btn {
   background:rgba(36,48,64,0.8); backdrop-filter:blur(8px);
   border:1px solid rgba(255,255,255,0.12); color:#fff;
-  font-size:13px; font-weight:700; padding:9px 18px;
-  border-radius:8px; cursor:pointer; transition:0.2s;
-  display:flex; align-items:center; gap:5px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.3);
-  font-family:'Nunito',sans-serif;
+  font-size:13px; font-weight:700; padding:9px 18px; border-radius:8px;
+  cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:5px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.3); font-family:'Nunito',sans-serif;
 }
 .nav-btn:hover:not(:disabled){background:rgba(71,201,107,0.18);border-color:var(--tip);box-shadow:0 0 16px rgba(71,201,107,0.25);}
 .nav-btn:disabled{opacity:0.3;cursor:not-allowed;}
-.step-indicator {
-  font-family:'Press Start 2P',monospace; font-size:7px;
-  color:var(--accent); letter-spacing:1px; text-align:center;
-  text-shadow:0 0 10px rgba(255,215,0,0.35);
-}
+.step-indicator { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--accent); letter-spacing:1px; text-align:center; text-shadow:0 0 10px rgba(255,215,0,0.35); }
+.back-to-choice { margin-bottom:14px;display:inline-block;background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;transition:0.2s;user-select:none; }
+.back-to-choice:hover { background:rgba(255,255,255,0.07);color:#fff; }
 
-/* ── FOOTER (black box) ── */
-.footer { text-align:center; margin-top:24px; padding:0 18px 30px; }
-.footer-inner {
-  background:rgba(0,0,0,0.72); backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,0.08); border-radius:12px;
-  padding:16px 22px; display:inline-block;
-  min-width:260px; box-shadow:0 8px 20px rgba(0,0,0,0.5);
-}
-.footer-logo {
-  font-family:'Press Start 2P',monospace; font-size:8px;
-  color:var(--mia); letter-spacing:2px; margin-bottom:6px;
-  text-shadow:0 0 12px rgba(93,158,49,0.5);
-}
-.footer-sub { font-size:10px; color:#7A8A9A; letter-spacing:1px; }
+/* ── FOOTER ── */
+.footer { text-align:center;margin-top:24px;padding:0 18px 30px; }
+.footer-inner { background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px 22px;display:inline-block;min-width:260px;box-shadow:0 8px 20px rgba(0,0,0,0.5); }
+.footer-logo { font-family:'Press Start 2P',monospace;font-size:8px;color:var(--mia);letter-spacing:2px;margin-bottom:6px;text-shadow:0 0 12px rgba(93,158,49,0.5); }
+.footer-sub { font-size:10px;color:#7A8A9A;letter-spacing:1px; }
 .footer-sub span { color:#FF6B6B; }
 
-@media (max-width:600px){
-  .top-bar{padding:8px 12px;gap:8px;}
-  .top-bar-join{font-size:6px;padding:5px 10px;}
-}
+@media (max-width:600px){ .top-bar{padding:8px 12px;gap:8px;} .top-bar-join{font-size:6px;padding:5px 10px;} .choice-btn{padding:18px 14px;min-width:150px;} .choice-icon{font-size:34px;} .choice-btn h2{font-size:16px;} }
 
 /* ── MIA WIDGET CSS ── */
-#mia-widget-btn{position:fixed;bottom:24px;right:24px;z-index:99999;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#9B4FDB,#5865F2);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(155,79,219,0.5);display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;transition:transform .2s,box-shadow .2s;animation:mia-pulse-ring 2.5s ease-in-out infinite;}
+#mia-widget-btn{
+  position:fixed; bottom:24px; right:24px; z-index:99999;
+  width:58px; height:58px; border-radius:50%;
+  background:linear-gradient(135deg,#9B4FDB,#5865F2);
+  border:none; cursor:pointer;
+  box-shadow:0 4px 20px rgba(155,79,219,0.5);
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px; line-height:1;
+  transition:transform .2s,box-shadow .2s;
+  animation:mia-pulse-ring 2.5s ease-in-out infinite;
+}
 @keyframes mia-pulse-ring{0%,100%{box-shadow:0 4px 20px rgba(155,79,219,0.5);}50%{box-shadow:0 4px 32px rgba(155,79,219,0.9),0 0 0 8px rgba(155,79,219,0.15);}}
 #mia-widget-btn:hover{transform:scale(1.1);}
-#mia-widget-panel{position:fixed;bottom:94px;right:24px;z-index:99998;width:340px;max-width:calc(100vw - 48px);background:rgba(12,18,32,0.97);border:1.5px solid rgba(155,79,219,0.4);border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.6),0 0 30px rgba(155,79,219,0.15);display:flex;flex-direction:column;transform:scale(0.9) translateY(16px);opacity:0;pointer-events:none;transition:all 0.25s cubic-bezier(.4,0,.2,1);overflow:hidden;max-height:520px;}
+#mia-widget-panel{
+  position:fixed; bottom:94px; right:24px; z-index:99998;
+  width:340px; max-width:calc(100vw - 48px);
+  background:rgba(12,18,32,0.97);
+  border:1.5px solid rgba(155,79,219,0.4);
+  border-radius:16px;
+  box-shadow:0 16px 48px rgba(0,0,0,0.6),0 0 30px rgba(155,79,219,0.15);
+  display:flex; flex-direction:column;
+  transform:scale(0.9) translateY(16px);
+  opacity:0; pointer-events:none;
+  transition:all 0.25s cubic-bezier(.4,0,.2,1);
+  overflow:hidden; max-height:520px;
+}
 #mia-widget-panel.mia-open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
-#mia-panel-header{background:linear-gradient(135deg,rgba(155,79,219,0.25),rgba(88,101,242,0.2));padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0;}
-#mia-avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;box-shadow:0 0 12px rgba(155,79,219,0.5);}
+#mia-panel-header{
+  background:linear-gradient(135deg,rgba(155,79,219,0.25),rgba(88,101,242,0.2));
+  padding:14px 16px; display:flex; align-items:center; gap:10px;
+  border-bottom:1px solid rgba(255,255,255,0.07); flex-shrink:0;
+}
+#mia-avatar{
+  width:36px; height:36px; border-radius:50%; overflow:hidden;
+  flex-shrink:0; box-shadow:0 0 12px rgba(155,79,219,0.5);
+}
 #mia-avatar img{width:100%;height:100%;object-fit:cover;}
 #mia-panel-title{font-weight:900;font-size:14px;color:#fff;line-height:1.2;}
 #mia-panel-sub{font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px;}
-#mia-online-dot{width:8px;height:8px;border-radius:50%;background:#47C96B;margin-left:auto;flex-shrink:0;box-shadow:0 0 6px #47C96B;animation:mia-blink 2s ease-in-out infinite;}
+#mia-online-dot{
+  width:8px; height:8px; border-radius:50%;
+  background:#47C96B; margin-left:auto; flex-shrink:0;
+  box-shadow:0 0 6px #47C96B;
+  animation:mia-blink 2s ease-in-out infinite;
+}
 @keyframes mia-blink{0%,100%{opacity:1}50%{opacity:0.4}}
-#mia-messages{flex:1;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:10px;font-family:'Nunito',sans-serif;scrollbar-width:thin;scrollbar-color:rgba(155,79,219,0.3) transparent;}
+#mia-messages{
+  flex:1; overflow-y:auto; padding:14px 14px 8px;
+  display:flex; flex-direction:column; gap:10px;
+  font-family:'Nunito',sans-serif;
+  scrollbar-width:thin; scrollbar-color:rgba(155,79,219,0.3) transparent;
+}
 #mia-messages::-webkit-scrollbar{width:4px;}
 #mia-messages::-webkit-scrollbar-track{background:transparent;}
 #mia-messages::-webkit-scrollbar-thumb{background:rgba(155,79,219,0.3);border-radius:2px;}
-.mia-msg{max-width:85%;padding:10px 13px;border-radius:12px;font-size:13.5px;line-height:1.65;animation:mia-pop .2s ease;word-break:break-word;}
+.mia-msg{
+  max-width:85%; padding:10px 13px; border-radius:12px;
+  font-size:13.5px; line-height:1.65; animation:mia-pop .2s ease;
+  word-break:break-word;
+}
 @keyframes mia-pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.mia-msg.user{align-self:flex-end;background:linear-gradient(135deg,#9B4FDB,#5865F2);color:#fff;border-bottom-right-radius:4px;}
-.mia-msg.bot{align-self:flex-start;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:#E0EAF0;border-bottom-left-radius:4px;}
+.mia-msg.user{
+  align-self:flex-end;
+  background:linear-gradient(135deg,#9B4FDB,#5865F2);
+  color:#fff; border-bottom-right-radius:4px;
+}
+.mia-msg.bot{
+  align-self:flex-start;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  color:#E0EAF0; border-bottom-left-radius:4px;
+}
 .mia-msg.bot strong{color:#FFD700;}
 .mia-msg.bot em{color:#47C96B;font-style:normal;}
 .mia-msg.bot code{background:rgba(0,0,0,0.4);padding:1px 5px;border-radius:3px;font-size:12px;color:#FFD700;}
-.mia-typing{align-self:flex-start;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:12px;border-bottom-left-radius:4px;padding:10px 14px;display:flex;gap:5px;align-items:center;}
-.mia-dot{width:7px;height:7px;border-radius:50%;background:rgba(155,79,219,0.8);animation:mia-bounce .9s ease-in-out infinite;}
+.mia-typing{
+  align-self:flex-start;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px; border-bottom-left-radius:4px;
+  padding:10px 14px; display:flex; gap:5px; align-items:center;
+}
+.mia-dot{
+  width:7px; height:7px; border-radius:50%;
+  background:rgba(155,79,219,0.8);
+  animation:mia-bounce .9s ease-in-out infinite;
+}
 .mia-dot:nth-child(2){animation-delay:.15s;}
 .mia-dot:nth-child(3){animation-delay:.3s;}
 @keyframes mia-bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-#mia-input-row{display:flex;gap:8px;padding:10px 12px;border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.2);flex-shrink:0;}
-#mia-input{flex:1;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:9px 13px;color:#fff;font-size:13px;font-family:'Nunito',sans-serif;outline:none;resize:none;max-height:80px;overflow-y:auto;transition:border-color .2s;}
+#mia-input-row{
+  display:flex; gap:8px; padding:10px 12px;
+  border-top:1px solid rgba(255,255,255,0.07);
+  background:rgba(0,0,0,0.2); flex-shrink:0;
+}
+#mia-input{
+  flex:1; background:rgba(255,255,255,0.06);
+  border:1.5px solid rgba(255,255,255,0.1);
+  border-radius:10px; padding:9px 13px;
+  color:#fff; font-size:13px; font-family:'Nunito',sans-serif;
+  outline:none; resize:none; max-height:80px; overflow-y:auto;
+  transition:border-color .2s;
+}
 #mia-input:focus{border-color:rgba(155,79,219,0.6);}
 #mia-input::placeholder{color:rgba(255,255,255,0.3);}
 #mia-input:disabled{opacity:0.5;cursor:not-allowed;}
-#mia-send{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#9B4FDB,#5865F2);border:none;cursor:pointer;color:#fff;font-size:17px;display:flex;align-items:center;justify-content:center;transition:transform .15s,opacity .15s;flex-shrink:0;align-self:flex-end;}
+#mia-send{
+  width:38px; height:38px; border-radius:10px;
+  background:linear-gradient(135deg,#9B4FDB,#5865F2);
+  border:none; cursor:pointer; color:#fff; font-size:17px;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .15s,opacity .15s; flex-shrink:0;
+  align-self:flex-end;
+}
 #mia-send:hover:not(:disabled){transform:scale(1.08);}
 #mia-send:disabled{opacity:0.4;cursor:not-allowed;}
-#mia-footer-note{text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding:4px 0 8px;font-family:'Nunito',sans-serif;flex-shrink:0;}
+#mia-footer-note{
+  text-align:center; font-size:10px;
+  color:rgba(255,255,255,0.2); padding:4px 0 8px;
+  font-family:'Nunito',sans-serif; flex-shrink:0;
+}
 </style>
 </head>
 <body>
@@ -296,29 +329,47 @@ body {
     <div class="hcloud" style="width:58px;height:15px;top:8px;left:78%;animation-duration:30s;animation-delay:-20s;"></div>
   </div>
   <div class="badge">📦 MIA GUIDE</div>
-  <h1>HOW TO DOWNLOAD<br>FROM MEGA.nz</h1>
-  <p class="hero-sub">No ads · encrypted · with or without an account</p>
+  <h1>HOW TO DOWNLOAD<br>FROM CURSEFORGE</h1>
+  <p class="hero-sub">Choose your edition first — avoid wrong files</p>
 </div>
 
 <!-- WIZARD -->
 <div class="wizard-wrap">
-  <div class="step-container" id="stepContainer"></div>
 
-  <div class="progress-bar" style="margin-top:14px;">
-    <div class="progress-fill" id="progressFill"></div>
+  <!-- CHOICE SCREEN -->
+  <div class="choice-screen" id="choiceScreen">
+    <div class="choice-title">⬛ CHOOSE YOUR MINECRAFT EDITION ⬛</div>
+    <div class="choice-buttons">
+      <div class="choice-btn java-btn" id="btnJava">
+        <div class="choice-icon">🖥️</div>
+        <h2 style="color:#D49CFF">Java Edition</h2>
+        <div class="choice-desc">PC only · .jar files · Forge / Fabric / NeoForge</div>
+      </div>
+      <div class="choice-btn bedrock-btn" id="btnBedrock">
+        <div class="choice-icon">📱</div>
+        <h2 style="color:#6EF09A">Bedrock Edition</h2>
+        <div class="choice-desc">Mobile / Win 10‑11 / Console · .mcpack / .mcaddon</div>
+      </div>
+    </div>
   </div>
 
-  <div id="stepExtraBtn">
-    <a href="https://xameraman.github.io/mia-install-guide-java-n-bedrock/" target="_blank">
-      🔧 Full Import Guide (Java & Bedrock) – Click Here
-    </a>
+  <!-- WIZARD AREA -->
+  <div id="wizardArea" style="display:none;">
+    <button class="back-to-choice" id="backBtn">← Choose another edition</button>
+    <div class="step-container" id="stepContainer"></div>
+    <div class="progress-bar" style="margin-top:14px;"><div class="progress-fill" id="progressFill"></div></div>
+    <div id="stepExtraBtn">
+      <a href="https://xameraman.github.io/mia-install-guide-java-n-bedrock/" target="_blank">
+        🔧 Full Import Guide (Java & Bedrock) – Click Here
+      </a>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn" id="prevBtn">← Previous</button>
+      <span class="step-indicator" id="stepIndicator">1 / 8</span>
+      <button class="nav-btn" id="nextBtn">Next →</button>
+    </div>
   </div>
 
-  <div class="nav-row">
-    <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)">← Previous</button>
-    <span class="step-indicator" id="stepIndicator">1 / 9</span>
-    <button class="nav-btn" id="nextBtn" onclick="changeStep(1)">Next →</button>
-  </div>
 </div>
 
 <div class="footer">
@@ -347,7 +398,7 @@ body {
     <div id="mia-online-dot"></div>
   </div>
   <div id="mia-messages">
-    <div class="mia-msg bot">Hey! 👋 I'm <strong>MIA Assistant</strong>. Ask me anything about <em>MIA</em>, MEGA, or anything else — I'm here to help!</div>
+    <div class="mia-msg bot">Hey! 👋 I'm <strong>MIA Assistant</strong>. Ask me anything about <em>MIA</em>, CurseForge, or anything else — I'm here to help!</div>
   </div>
   <div id="mia-input-row">
     <textarea id="mia-input" placeholder="Ask me anything..." rows="1"></textarea>
@@ -359,242 +410,322 @@ body {
 <script>
 /* ─── Animated canvas background ─── */
 (function(){
-  const canvas=document.getElementById('bg-canvas');
-  const ctx=canvas.getContext('2d');
+  const c=document.getElementById('bg-canvas');
+  const x=c.getContext('2d');
   let W,H;
-  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-  resize();window.addEventListener('resize',resize);
-  const stars=[];for(let i=0;i<160;i++)stars.push({x:Math.random(),y:Math.random()*.85,r:Math.random()*1.4+.3,a:Math.random(),speed:.003+Math.random()*.006,phase:Math.random()*Math.PI*2});
-  const orbCols=['rgba(93,158,49,','rgba(71,201,107,','rgba(198,120,255,','rgba(255,215,0,','rgba(88,101,242,'];
-  const orbs=[];for(let i=0;i<7;i++)orbs.push({x:Math.random(),y:Math.random(),r:60+Math.random()*120,col:orbCols[Math.floor(Math.random()*orbCols.length)],vx:(Math.random()-.5)*.00015,vy:(Math.random()-.5)*.00015,a:.04+Math.random()*.05});
-  const pixCols=['#5D9E31','#7DC940','#FFD700','#47C96B','#C678FF','#fff','#5865F2'];
-  const pixels=[];function spawnPx(){return{x:Math.random(),y:1.05,size:3+Math.random()*5,col:pixCols[Math.floor(Math.random()*7)],vx:(Math.random()-.5)*.0004,vy:-(0.0004+Math.random()*.0008),a:0,maxA:.4+Math.random()*.35,rot:Math.random()*360,rotV:(Math.random()-.5)*1.2};}
-  for(let i=0;i<28;i++)pixels.push(spawnPx());
-  let shooters=[];setInterval(()=>shooters.push({x:Math.random()*.6,y:Math.random()*.4,len:80+Math.random()*140,speed:.006+Math.random()*.008,progress:0,a:.7+Math.random()*.3,angle:Math.PI/5+(Math.random()-.5)*.3}),3200);
+  function R(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  R();window.addEventListener('resize',R);
+  const S=[];for(let i=0;i<160;i++)S.push({x:Math.random(),y:Math.random()*.85,r:Math.random()*1.4+.3,a:Math.random(),sp:.003+Math.random()*.006,ph:Math.random()*Math.PI*2});
+  const OC=['rgba(93,158,49,','rgba(71,201,107,','rgba(198,120,255,','rgba(255,215,0,','rgba(88,101,242,'];
+  const O=[];for(let i=0;i<7;i++)O.push({x:Math.random(),y:Math.random(),r:60+Math.random()*120,co:OC[Math.floor(Math.random()*OC.length)],vx:(Math.random()-.5)*.00015,vy:(Math.random()-.5)*.00015,a:.04+Math.random()*.05});
+  const PC=['#5D9E31','#7DC940','#FFD700','#47C96B','#C678FF','#fff','#5865F2'];
+  const P=[];function sp(){return{x:Math.random(),y:1.05,s:3+Math.random()*5,co:PC[Math.floor(Math.random()*7)],vx:(Math.random()-.5)*.0004,vy:-(.0004+Math.random()*.0008),a:0,mA:.4+Math.random()*.35,ro:Math.random()*360,rv:(Math.random()-.5)*1.2};}
+  for(let i=0;i<28;i++)P.push(sp());
+  let SH=[];setInterval(()=>SH.push({x:Math.random()*.6,y:Math.random()*.4,len:80+Math.random()*140,sp:.006+Math.random()*.008,pro:0,a:.7+Math.random()*.3,ang:Math.PI/5+(Math.random()-.5)*.3}),3200);
   let t=0;
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#06091A');g.addColorStop(.5,'#0A1628');g.addColorStop(1,'#0D2040');
-    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-    for(const o of orbs){o.x+=o.vx;o.y+=o.vy;if(o.x<-.1)o.x=1.1;if(o.x>1.1)o.x=-.1;if(o.y<-.1)o.y=1.1;if(o.y>1.1)o.y=-.1;
-      const rg=ctx.createRadialGradient(o.x*W,o.y*H,0,o.x*W,o.y*H,o.r);rg.addColorStop(0,o.col+o.a+')');rg.addColorStop(1,o.col+'0)');
-      ctx.fillStyle=rg;ctx.beginPath();ctx.arc(o.x*W,o.y*H,o.r,0,Math.PI*2);ctx.fill();}
-    for(const s of stars){const p=.4+.6*(.5+.5*Math.sin(t*s.speed+s.phase));ctx.globalAlpha=s.a*p;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(s.x*W,s.y*H,s.r*(.8+.3*p),0,Math.PI*2);ctx.fill();}
-    ctx.globalAlpha=1;
-    shooters=shooters.filter(s=>s.progress<1.3);
-    for(const s of shooters){s.progress+=s.speed;
-      const sx=s.x*W+Math.cos(s.angle)*s.progress*s.len*3,sy=s.y*H+Math.sin(s.angle)*s.progress*s.len*3;
-      const ex=sx-Math.cos(s.angle)*s.len,ey=sy-Math.sin(s.angle)*s.len;
-      const fade=s.progress>.8?1-(s.progress-.8)/.5:1;
-      const lg=ctx.createLinearGradient(ex,ey,sx,sy);lg.addColorStop(0,'rgba(255,255,255,0)');lg.addColorStop(1,`rgba(255,255,255,${s.a*fade})`);
-      ctx.strokeStyle=lg;ctx.lineWidth=1.5;ctx.globalAlpha=fade;ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(sx,sy);ctx.stroke();ctx.globalAlpha=1;}
-    for(let i=0;i<pixels.length;i++){const p=pixels[i];p.x+=p.vx;p.y+=p.vy;p.rot+=p.rotV;p.a=Math.min(p.maxA,p.a+.008);if(p.y<-.05){pixels[i]=spawnPx();continue;}
-      ctx.save();ctx.translate(p.x*W,p.y*H);ctx.rotate(p.rot*Math.PI/180);ctx.globalAlpha=p.a;ctx.fillStyle=p.col;ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);ctx.restore();}
-    ctx.globalAlpha=1;t+=.6;requestAnimationFrame(draw);
-  }
-  draw();
+  function D(){
+    x.clearRect(0,0,W,H);
+    const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#06091A');g.addColorStop(.5,'#0A1628');g.addColorStop(1,'#0D2040');
+    x.fillStyle=g;x.fillRect(0,0,W,H);
+    for(const o of O){o.x+=o.vx;o.y+=o.vy;if(o.x<-.1)o.x=1.1;if(o.x>1.1)o.x=-.1;if(o.y<-.1)o.y=1.1;if(o.y>1.1)o.y=-.1;
+      const rg=x.createRadialGradient(o.x*W,o.y*H,0,o.x*W,o.y*H,o.r);rg.addColorStop(0,o.co+o.a+')');rg.addColorStop(1,o.co+'0)');
+      x.fillStyle=rg;x.beginPath();x.arc(o.x*W,o.y*H,o.r,0,Math.PI*2);x.fill();}
+    for(const s of S){const p=.4+.6*(.5+.5*Math.sin(t*s.sp+s.ph));x.globalAlpha=s.a*p;x.fillStyle='#fff';x.beginPath();x.arc(s.x*W,s.y*H,s.r*(.8+.3*p),0,Math.PI*2);x.fill();}x.globalAlpha=1;
+    SH=SH.filter(s=>s.pro<1.3);
+    for(const s of SH){s.pro+=s.sp;const sx=s.x*W+Math.cos(s.ang)*s.pro*s.len*3,sy=s.y*H+Math.sin(s.ang)*s.pro*s.len*3;const ex=sx-Math.cos(s.ang)*s.len,ey=sy-Math.sin(s.ang)*s.len;const f=s.pro>.8?1-(s.pro-.8)/.5:1;const lg=x.createLinearGradient(ex,ey,sx,sy);lg.addColorStop(0,'rgba(255,255,255,0)');lg.addColorStop(1,`rgba(255,255,255,${s.a*f})`);x.strokeStyle=lg;x.lineWidth=1.5;x.globalAlpha=f;x.beginPath();x.moveTo(ex,ey);x.lineTo(sx,sy);x.stroke();x.globalAlpha=1;}
+    for(let i=0;i<P.length;i++){const p=P[i];p.x+=p.vx;p.y+=p.vy;p.ro+=p.rv;p.a=Math.min(p.mA,p.a+.008);if(p.y<-.05){P[i]=sp();continue;}x.save();x.translate(p.x*W,p.y*H);x.rotate(p.ro*Math.PI/180);x.globalAlpha=p.a;x.fillStyle=p.co;x.fillRect(-p.s/2,-p.s/2,p.s,p.s);x.restore();}x.globalAlpha=1;t+=.6;requestAnimationFrame(D);}
+  D();
 })();
 
-/* ─── MEGA Steps ─── */
-const steps = [
-  {
-    title: "🔒 What is MEGA?",
-    body: `
-      <p>MEGA is a <strong>secure cloud storage</strong> and file‑sharing service. Unlike most file hosts, MEGA has <strong>no ads</strong> and all files are <strong>end‑to‑end encrypted</strong> — your download is decrypted right in your browser.</p>
-      <p style="margin-top:10px;">It's a clean, safe platform — but free users do have <strong>download limits</strong> (around 5 GB every 6 hours). For small to medium files, it just works.</p>
-      <div class="callout tip"><span class="callout-icon">💡</span><span>MEGA is one of the safest file hosts — no fake download buttons, no pop‑ups, no malware risks.</span></div>
-    `,
-    miaTip: "🌿 <strong>MIA Helps:</strong> MEGA is a preferred host because of its clean interface and strong security. We share MEGA links whenever possible."
-  },
-  {
-    title: "🔗 Step 1: Open the MEGA Link",
-    body: `
-      <p>Click the MEGA link you've been given. You'll see a page showing the <strong>file name</strong> and <strong>file size</strong>, along with a download button.</p>
-      <p style="margin-top:10px;">Sometimes you may see a <strong>folder view</strong> instead of a single file — that just means multiple files are available.</p>
-      <div class="callout info"><span class="callout-icon">ℹ️</span><span>The page should load quickly with no ads or pop‑ups. MEGA's interface is clean and straightforward.</span></div>
-    `,
-    miaTip: "🌿 <strong>MIA Helps:</strong> The link should open directly to the file. If it doesn't work, the link may be incomplete — ask the sharer to re‑send it."
-  },
-  {
-    title: "📥 Step 2: Choose How to Download",
-    body: `
-      <p>You'll usually see two main options on the page:</p>
-      <ul style="margin-top:10px; padding-left:20px;">
-        <li><strong>Download</strong> — saves the file directly to your device. This is the most common choice.</li>
-        <li><strong>Import to Cloud Drive</strong> — saves the file to your own MEGA account for later (requires signing in).</li>
-      </ul>
-      <p style="margin-top:10px;">For most people, just clicking <strong>Download</strong> is the way to go.</p>
-    `,
-    miaTip: "🌿 <strong>MIA Helps:</strong> For small files, just press Download. For very large files, check the next steps."
-  },
-  {
-    title: "⚡ Step 3: Direct Download (Most Common)",
-    body: `
-      <p>Tap the <strong>Download</strong> button. Your browser will start processing the file — MEGA decrypts it <strong>in your browser</strong> before saving.</p>
-      <p style="margin-top:10px;">This works perfectly for <strong>small to medium files</strong> (up to a few hundred MB). The file will appear in your Downloads folder when done.</p>
-      <div class="callout tip"><span class="callout-icon">💡</span><span>Use a Chromium‑based browser (Chrome, Edge, Opera) for the smoothest experience — they handle large files better.</span></div>
-    `,
-    miaTip: "🌿 <strong>MIA Helps:</strong> For typical Minecraft add‑ons (.mcpack, .mcaddon, .zip), the browser download works perfectly every time."
-  },
-  {
-    title: "⚠️ Step 4: What About Large Files?",
-    body: `
-      <p>For <strong>large files</strong> (1 GB+), things can get tricky:</p>
-      <ul style="margin-top:10px; padding-left:20px;">
-        <li><strong>Browser limits:</strong> Firefox caps at ~4 GB, Safari at ~2 GB, and mobile browsers have much smaller limits (iOS Chrome: 1 MB max!).</li>
-        <li><strong>Transfer quota:</strong> Free users are limited to about <strong>5 GB per 6 hours</strong>. If you hit this, you'll see "Transfer quota exceeded".</li>
-      </ul>
-      <div class="callout warn"><span class="callout-icon">⚠️</span><span>If a large file download stops or won't start, you're likely hitting the transfer limit. Don't worry — there are workarounds.</span></div>
-    `,
-    miaTip: "🌿 <strong>MIA Helps:</strong> Most Minecraft files are small enough to download without hitting MEGA's limits. If you do hit them, read on."
-  },
-  {
-    title: "📲 Step 5: Use the MEGA App (for Large Files)",
-    body: `
-      <p>If your download keeps stopping or the file is huge, the <strong>MEGA mobile or desktop app</strong> is the best solution:</p>
-      <ol style="margin-top:10px; padding-left:20px;">
-        <li>Install the MEGA app from your device's app store</li>
-        <li>Open the link again — it should open in the app</li>
-        <li>Download inside the app (it handles large files and supports resume)</li>
-      </ol>
-      <p style="margin-top:10px;">The app is <strong>not required</strong> for most downloads, but it makes large transfers much smoother.</p>
-      <div class="callout tip"><span class="callout-icon">💡</span><span>The desktop app (MEGASync) can also download entire folders at once — great for modpacks or multi‑file downloads.</span></div>
-    `,
-    miaTip: "🌿 <strong>MIA Helps:</strong> You don't need the app for typical add‑ons. But if you're downloading a large modpack or world file, it's a lifesaver."
-  },
-  {
-    title: "☁️ Step 6: Alternative — Import to Cloud Drive",
-    body: `
-      <p>Instead of downloading immediately, you can <strong>import the file to your own MEGA account</strong>:</p>
-      <ol style="margin-top:10px; padding-left:20px;">
-        <li>Click <strong>"Import to Cloud Drive"</strong> instead of Download</li>
-        <li>Sign in (or create a free MEGA account — 20 GB free storage)</li>
-        <li>The file saves to your cloud — download it anytime, even later</li>
-      </ol>
-      <p style="margin-top:10px;">This is useful for <strong>large files</strong> or if you want to keep the file in your account for later access.</p>
-      <div class="callout info"><span class="callout-icon">ℹ️</span><span>Creating a free MEGA account also gives you 20 GB of storage — and may help reduce transfer limits on future downloads.</span></div>
-    `,
-    miaTip: "🌿 <strong>MIA Helps:</strong> A free MEGA account is quick to set up. If you download from MEGA often, it's worth having one."
-  },
-  {
-    title: "📁 Step 7: Locate the Downloaded File",
-    body: `
-      <p>Once the download completes, the file will be in your device's <strong>Downloads</strong> folder (or wherever your browser saves files).</p>
-      <p style="margin-top:10px;">For Minecraft files:</p>
-      <ul style="margin-top:8px; padding-left:20px;">
-        <li><strong>.mcpack / .mcaddon</strong> — tap to auto‑import into Minecraft Bedrock</li>
-        <li><strong>.zip / .jar</strong> — for Java Edition mods or resource packs</li>
-        <li><strong>.mcworld</strong> — tap to import a world into Minecraft</li>
-      </ul>
-    `,
-    miaTip: "🌿 <strong>MIA Helps:</strong> For a complete guide on installing and importing these file types, use the button at the end of this guide."
-  },
-  {
-    title: "🛠️ Common Issues & Quick Fixes",
-    body: `
-      <p><strong>⛔ "Transfer quota exceeded"</strong></p>
-      <p>You've hit the ~5 GB/6 hour limit. Either <strong>wait</strong> (the quota resets automatically) or <strong>use the MEGA app</strong> on a different network (e.g., switch from Wi‑Fi to mobile data).</p>
-      <p style="margin-top:12px;"><strong>⏹️ Download stops or won't start</strong></p>
-      <p>Try a different browser (Chrome/Edge work best). On mobile, <strong>use the MEGA app</strong> — mobile browsers have severe file‑size limits.</p>
-      <p style="margin-top:12px;"><strong>🐌 Very slow download</strong></p>
-      <p>You may be throttled after reaching the quota. Wait 6 hours or switch networks.</p>
-      <div class="callout warn"><span class="callout-icon">⚠️</span><span><strong>Important:</strong> Never download random "MEGA downloader" tools — many contain malware. Stick to the official app or browser.</span></div>
-    `,
-    miaTip: "🌿 <strong>MIA Helps:</strong> Small files → browser. Large files → MEGA app. That one rule solves 99% of MEGA problems."
-  }
-];
+/* ─── ENHANCED WIZARD DATA ─── */
+var wizardSteps = {
+  java: [
+    { title:"🖥️ Welcome — Java Edition", body:'<p>You\'re downloading <strong>Java Edition mods</strong>. These use <strong>.jar</strong> files and require a mod loader like <strong>Forge</strong>, <strong>Fabric</strong>, or <strong>NeoForge</strong>. Make sure you have the correct loader installed for your Minecraft version — they are <strong>not interchangeable</strong>.</p><div class="callout info"><span class="callout-icon">ℹ️</span><span>If in doubt, open your Minecraft launcher and check the profile name — it will say "Forge", "Fabric", etc. next to the version number.</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> All MIA‑shared CurseForge links lead directly to the mod page, so you can skip searching.' },
+    { title:"🌐 Step 1: Go to CurseForge", body:'<p>Open your browser and go to <strong>curseforge.com/minecraft</strong>. CurseForge is the largest Minecraft mod repository — clean, official, and owned by Overwolf. You can also use the <strong>CurseForge app</strong> (standalone launcher) which handles mod installation automatically.</p><div class="callout tip"><span class="callout-icon">💡</span><span>The CurseForge app is the easiest way for beginners — it installs mods with one click and manages your profiles and loaders.</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> CurseForge is safe with no fake download buttons. The real download is always on the file list.' },
+    { title:"🔍 Step 2: Search for Your Mod", body:'<p>Use the search bar at the top. Type the mod name (e.g. <strong>"Sodium"</strong> or <strong>"JEI"</strong>), then click the correct result from the list. You can also use the sidebar filters to narrow by <strong>mod loader</strong> (Forge / Fabric) and <strong>game version</strong> before searching.</p><div class="callout tip"><span class="callout-icon">💡</span><span>Look for mods with the "Verified" badge — these are from trusted, official authors.</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> We often share direct links to the mod\'s CurseForge page, saving you the search step entirely.' },
+    { title:"⚠️ Step 3: Check Compatibility", body:'<p>On the mod page, <strong>before downloading</strong>, check three things:</p><ul style="margin-top:8px;padding-left:20px;"><li><strong>Minecraft Version</strong> — must match your game (e.g. 1.20.1).</li><li><strong>Mod Loader</strong> — Forge, Fabric, or NeoForge. These are <strong>NOT interchangeable!</strong></li><li><strong>Dependencies</strong> — some mods need other mods (like Fabric API or GeckoLib). Check the "Relations" tab.</li></ul><div class="callout warn"><span class="callout-icon">⚠️</span><span>Using a Fabric mod with Forge (or vice versa) is the #1 reason mods fail to load. Always double‑check!</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> The "Relations" tab on CurseForge lists required dependencies — never skip this check.' },
+    { title:"📦 Step 4: Go to the Files Tab", body:'<p>Click the <strong>"Files"</strong> tab just below the project title. You\'ll see a list of all available versions with the newest at the top. Use the <strong>dropdown menus</strong> at the top of the Files tab to filter by game version and mod loader.</p><p style="margin-top:8px;">Each file shows the Minecraft version and mod loader it supports. Pick the version that matches your setup.</p>', miaTip:'🌿 <strong>MIA Helps:</strong> CurseForge usually marks the latest file for each version — but always verify manually.' },
+    { title:"📥 Step 5: Download the File", body:'<p>Click the three dots <strong>(⋯)</strong> next to the version you want, then press <strong>"Download File"</strong>. A <strong>5‑second countdown</strong> may appear — this is normal and built into CurseForge. Wait for it, then the download starts automatically.</p><p style="margin-top:8px;">The file saves as a <strong>.jar</strong> (e.g. <code>sodium-fabric-1.20.1.jar</code>).</p><div class="callout warn"><span class="callout-icon">⚠️</span><span>Never click banner ads around the page — they are not the real download. The genuine download button is inside the Files tab.</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> CurseForge doesn\'t use Linkvertise or ad‑walls. The 5‑second wait is part of the site.' },
+    { title:"📁 Step 6: Locate & Install the Mod", body:'<p>Find the downloaded <strong>.jar</strong> in your Downloads folder. <strong>Do NOT double‑click it</strong> — just move it to your mods folder:</p><ul style="margin-top:8px;padding-left:20px;"><li>Press <code>Win + R</code>, type <code>%appdata%</code>, then open <strong>.minecraft</strong>.</li><li>Open or create the <strong>mods</strong> folder.</li><li>Drag the .jar into the mods folder.</li></ul><p style="margin-top:8px;"><strong>macOS:</strong> <code>~/Library/Application Support/minecraft</code> · <strong>Linux:</strong> <code>~/.minecraft</code></p>', miaTip:'🌿 <strong>MIA Helps:</strong> If the mods folder doesn\'t exist, just create it. That\'s completely normal for first‑time modders.' },
+    { title:"▶️ Step 7: Launch & Confirm", body:'<p>Open the Minecraft Launcher, select your <strong>Forge</strong>, <strong>Fabric</strong>, or <strong>NeoForge</strong> profile, and press Play.</p><p style="margin-top:8px;">If everything works, the mod will load. Check by clicking the <strong>Mods</strong> button on the main menu. If it crashes or doesn\'t appear, double‑check the version, loader, and any missing dependencies.</p><div class="callout warn"><span class="callout-icon">⚠️</span><span>Missing dependencies are a common cause of crashes. Always check the "Relations" tab on the CurseForge page.</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> Join our Discord if you need help troubleshooting — our community is here to assist.' }
+  ],
+  bedrock: [
+    { title:"📱 Welcome — Bedrock Edition", body:'<p>You\'re downloading <strong>Bedrock Edition content</strong> (add‑ons, resource packs, worlds). These use <strong>.mcpack</strong> or <strong>.mcaddon</strong> files that auto‑import into Minecraft. <strong>Do NOT download .jar files</strong> — those are for Java only.</p><div class="callout info"><span class="callout-icon">ℹ️</span><span>CurseForge has a dedicated Bedrock section at <strong>curseforge.com/minecraft-bedrock</strong> with thousands of add‑ons, worlds, and texture packs.</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> CurseForge has a large Bedrock section. Always look for the Bedrock badge on the mod page.' },
+    { title:"🌐 Step 1: Go to CurseForge (Bedrock)", body:'<p>Open your browser and go to <strong>curseforge.com/minecraft-bedrock</strong>. You can also browse the main CurseForge site and switch to Bedrock using the <strong>edition toggle</strong> at the top of the page.</p><p style="margin-top:8px;">Browse categories like <strong>Add‑ons</strong>, <strong>Texture Packs</strong>, or <strong>Worlds</strong> to find content.</p>', miaTip:'🌿 <strong>MIA Helps:</strong> The Bedrock section clearly labels all content as "Minecraft Bedrock" — you won\'t accidentally grab Java files.' },
+    { title:"⚠️ Step 2: Check File Type (CRITICAL)", body:'<p>Before downloading, <strong>always check the file extension</strong>. Bedrock only works with:</p><ul style="margin-top:8px;padding-left:20px;"><li><strong>.mcpack</strong> — single resource or behaviour pack</li><li><strong>.mcaddon</strong> — contains both resource + behaviour pack</li><li><strong>.mcworld</strong> — world / map file</li></ul><div class="callout warn"><span class="callout-icon">⚠️</span><span>If you see a <strong>.jar</strong> file, it\'s for Java — do NOT download it. It will not work on Bedrock.</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> On mobile, always look for .mcpack or .mcaddon. That\'s your confirmation it\'s Bedrock content.' },
+    { title:"📦 Step 3: Go to the Files Tab", body:'<p>On the project page, click the <strong>"Files"</strong> tab. You\'ll see a list of available versions. Most Bedrock add‑ons have just one or two files — pick the latest version.</p>', miaTip:'🌿 <strong>MIA Helps:</strong> CurseForge typically lists the newest compatible version first — but always verify the filename before downloading.' },
+    { title:"📥 Step 4: Download the File", body:'<p>Click the <strong>orange Download button</strong>. A 5‑second countdown may appear — this is normal and built into CurseForge. After the countdown, the file saves to your Downloads folder.</p><div class="callout tip"><span class="callout-icon">💡</span><span>CurseForge doesn\'t have fake download buttons on the Bedrock section. The orange button is the real one — no ads to confuse you.</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> The orange download button is always the genuine one on CurseForge Bedrock pages.' },
+    { title:"📁 Step 5: Open & Import the File", body:'<p>Open your file manager (like <strong>ZArchiver</strong> on Android or the Files app on iOS). Locate the <strong>.mcpack</strong> or <strong>.mcaddon</strong> file.</p><p style="margin-top:8px;">Tap the file and choose <strong>Minecraft</strong>. Minecraft will open and display:</p><p style="color:var(--tip);font-weight:700;margin-top:6px;">"Import Started…" → "Successfully Imported"</p><div class="callout tip"><span class="callout-icon">💡</span><span>If the file doesn\'t open, try "Open with" → Minecraft. If it\'s a .zip, rename it to .mcpack first.</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> The import process is automatic — just tap and Minecraft handles the rest.' },
+    { title:"⚙️ Step 6: Activate in Your World", body:'<p>After importing, the pack still needs to be <strong>activated</strong>:</p><ul style="margin-top:8px;padding-left:20px;"><li>Create or edit a world</li><li>Scroll to <strong>Behaviour Packs</strong> and/or <strong>Resource Packs</strong></li><li>Tap the pack → <strong>Active</strong></li><li>For .mcaddon files, enable <strong>both</strong> packs</li></ul><div class="callout info"><span class="callout-icon">ℹ️</span><span>Some add‑ons require <strong>Experimental Gameplay</strong>. Go to World Settings → Experiments and enable what the add‑on documentation mentions (e.g. Holiday Creator Features).</span></div>', miaTip:'🌿 <strong>MIA Helps:</strong> For .mcaddon files, both packs appear separately — activate both or it won\'t work.' },
+    { title:"✅ Step 7: Play!", body:'<p>Enter your world and the content should be active. If something isn\'t working:</p><ul style="margin-top:8px;padding-left:20px;"><li>Check the pack is enabled in world settings</li><li>Verify your Minecraft version is up to date</li><li>Enable any required experimental features</li><li>If the import failed, re‑download and try again</li></ul>', miaTip:'🌿 <strong>MIA Helps:</strong> Need a full import guide with detailed troubleshooting? Use the yellow button below.' }
+  ]
+};
 
-const totalSteps = steps.length;
-let currentStep = 0;
-const container = document.getElementById('stepContainer');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const indicator = document.getElementById('stepIndicator');
-const progressFill = document.getElementById('progressFill');
-const extraBtn = document.getElementById('stepExtraBtn');
+var stepColors = ['#00c6ff','#a78bfa','#f59e0b','#34d399','#f87171','#60a5fa','#f472b6','#00ff88'];
+var currentEdition = null;
+var currentStep = 0;
 
-const stepColors = [
-  '#00c6ff', '#a78bfa', '#f59e0b', '#34d399',
-  '#f87171', '#60a5fa', '#f472b6', '#fbbf24', '#00ff88'
-];
+var choiceScreen = document.getElementById('choiceScreen');
+var wizardArea = document.getElementById('wizardArea');
+var stepContainer = document.getElementById('stepContainer');
+var prevBtn = document.getElementById('prevBtn');
+var nextBtn = document.getElementById('nextBtn');
+var indicatorEl = document.getElementById('stepIndicator');
+var progressFill = document.getElementById('progressFill');
+var extraBtn = document.getElementById('stepExtraBtn');
+var backBtn = document.getElementById('backBtn');
+
+/* ─── EDITION BUTTON CLICK HANDLERS ─── */
+document.getElementById('btnJava').onclick = function(){ startWizard('java'); };
+document.getElementById('btnBedrock').onclick = function(){ startWizard('bedrock'); };
+backBtn.onclick = function(){ goBackToChoice(); };
+prevBtn.onclick = function(){ changeStep(-1); };
+nextBtn.onclick = function(){ changeStep(1); };
+
+function startWizard(edition) {
+  if (!edition) return;
+  currentEdition = edition;
+  currentStep = 0;
+  choiceScreen.classList.add('hidden');
+  wizardArea.style.display = 'block';
+  renderSteps();
+  updateUI();
+  stepContainer.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function goBackToChoice() {
+  wizardArea.style.display = 'none';
+  choiceScreen.classList.remove('hidden');
+  currentEdition = null;
+}
 
 function renderSteps() {
-  container.innerHTML = '';
-  steps.forEach((step, index) => {
-    const panel = document.createElement('div');
+  var steps = wizardSteps[currentEdition];
+  stepContainer.innerHTML = '';
+  steps.forEach(function(step, idx) {
+    var panel = document.createElement('div');
     panel.className = 'step-panel';
-    const color = stepColors[index % stepColors.length];
+    var color = stepColors[idx % stepColors.length];
     panel.style.borderLeftColor = color;
-    panel.innerHTML = `
-      <div class="step-title">
-        <span class="step-num" style="background:${color}; box-shadow: 0 0 14px ${color};">STEP ${index+1}</span>
-        ${step.title}
-      </div>
-      <div class="step-body">${step.body}</div>
-      <div class="callout mia-callout">
-        <span class="callout-icon"><img src="mia-icon.png" alt="MIA" style="width:18px;height:18px;border-radius:3px;"></span>
-        <span>${step.miaTip}</span>
-      </div>
-    `;
-    container.appendChild(panel);
+    panel.innerHTML =
+      '<div class="step-title">' +
+        '<span class="step-num" style="background:'+color+';box-shadow:0 0 14px '+color+';">STEP '+(idx+1)+'</span>' +
+        step.title +
+      '</div>' +
+      '<div class="step-body">'+step.body+'</div>' +
+      '<div class="callout mia-callout">' +
+        '<span class="callout-icon"><img src="mia-icon.png" alt="MIA" style="width:18px;height:18px;border-radius:3px;"></span>' +
+        '<span>'+step.miaTip+'</span>' +
+      '</div>';
+    stepContainer.appendChild(panel);
   });
 }
 
 function updateUI() {
-  document.querySelectorAll('.step-panel').forEach((p, i) => p.classList.toggle('active', i === currentStep));
-  prevBtn.disabled = currentStep === 0;
-  nextBtn.disabled = currentStep === totalSteps - 1;
-  indicator.textContent = `${currentStep + 1} / ${totalSteps}`;
-  progressFill.style.width = `${(currentStep / (totalSteps - 1)) * 100}%`;
-  extraBtn.style.display = (currentStep === totalSteps - 1) ? 'block' : 'none';
-  nextBtn.textContent = currentStep === totalSteps - 1 ? '✅ Done' : 'Next →';
+  var steps = wizardSteps[currentEdition];
+  var panels = stepContainer.querySelectorAll('.step-panel');
+  panels.forEach(function(p, i) { p.classList.toggle('active', i === currentStep); });
+  prevBtn.disabled = (currentStep === 0);
+  nextBtn.disabled = (currentStep === steps.length - 1);
+  indicatorEl.textContent = (currentStep+1)+' / '+steps.length;
+  progressFill.style.width = ((currentStep/(steps.length-1))*100)+'%';
+  extraBtn.style.display = (currentStep === steps.length - 1) ? 'block' : 'none';
+  nextBtn.textContent = (currentStep === steps.length - 1) ? '✅ Done' : 'Next →';
 }
 
-function changeStep(direction) {
-  const next = currentStep + direction;
-  if (next >= 0 && next < totalSteps) {
+function changeStep(dir) {
+  var steps = wizardSteps[currentEdition];
+  var next = currentStep + dir;
+  if (next >= 0 && next < steps.length) {
     currentStep = next;
     updateUI();
-    document.getElementById('stepContainer').scrollIntoView({ behavior:'smooth', block:'start' });
+    stepContainer.scrollIntoView({ behavior:'smooth', block:'start' });
   }
 }
-
-renderSteps();
-updateUI();
 </script>
-<!-- ══════════════════ MIA WIDGET JS (full, working) ══════════════════ -->
+<!-- ══════════════════ MIA WIDGET JS (v14 – swear filter, new chat, complexity routing) ══════════════════ -->
 <script>
 (function () {
   const API_URL = 'https://xameraman5022-mia-assistant.hf.space/chat';
-  const SOURCE  = 'mega-guide'; // MEGA.nz‑specific knowledge
+  const SOURCE  = 'curseforge-guide'; // CurseForge-Specific Knowledge
 
-  // ── Persistent user token ──
+  // ── Persistent token ──
   let token = localStorage.getItem('mia_token');
   if (!token) {
     token = crypto.randomUUID();
     localStorage.setItem('mia_token', token);
   }
 
-  // ── Basic device fingerprint ──
+  // ── Device fingerprint ──
   const fingerprint =
-    navigator.userAgent +
-    "_" +
-    screen.width +
-    "x" +
-    screen.height +
-    "_" +
+    navigator.userAgent + "_" +
+    screen.width + "x" + screen.height + "_" +
     Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  let history = [];
-  let isOpen = false;
-  let isLoading = false;
+  // ── Frontend bad word list ──
+  const BAD_WORDS = [
+    "fuck", "f*ck", "fck", "fuk", "fuq", "fvck",
+    "shit", "sh1t", "sh*t", "sht",
+    "bitch", "b*tch", "btch", "biatch",
+    "bastard", "cunt", "c*nt",
+    "dick", "d*ck", "cock", "c*ck",
+    "pussy", "p*ssy", "piss", "p*ss",
+    "whore", "wh*re", "slut", "sl*t",
+    "retard", "retarded",
+    "i will kill", "i'll kill", "gonna kill",
+    "i hate you", "hate you",
+    "shut up", "stfu",
+    "go die", "kys", "kill yourself",
+    "you suck", "sucks ass",
+    "useless bot", "stupid bot", "dumb bot",
+    "garbage bot", "trash bot", "worst bot",
+    "useless ai", "stupid ai", "dumb ai",
+    "this is trash", "this is garbage",
+    "you're trash", "you're garbage", "you're useless",
+    "you're stupid", "you're dumb", "you're an idiot",
+    "you are trash", "you are garbage", "you are useless",
+    "you are stupid", "you are dumb", "you are an idiot",
+    "nsfw", "porn", "pornography", "xxx", "nude", "naked",
+    "hentai", "lewd", "explicit", "erotic",
+    "onlyfans", "fetish",
+    "gore", "self harm", "self-harm",
+    "suicide method", "how to kill", "how to make bomb",
+  ];
+
+  const MULTI_WORD_BAD = BAD_WORDS.filter(w => w.includes(" "));
+  const SINGLE_BAD     = BAD_WORDS.filter(w => !w.includes(" "));
+
+  function isBadMessage(text) {
+    const lowered = text.toLowerCase();
+    for (const phrase of MULTI_WORD_BAD) {
+      if (lowered.includes(phrase)) return true;
+    }
+    const tokens         = new Set(lowered.match(/[a-z0-9*]+/g) || []);
+    const collapsed      = lowered.replace(/\s+/g, '');
+    const collapsedTokens = new Set(collapsed.match(/[a-z0-9*]+/g) || []);
+    for (const word of SINGLE_BAD) {
+      if (tokens.has(word) || collapsedTokens.has(word)) return true;
+    }
+    return false;
+  }
+
+  // ── Frontend repetition tracking ──
+  const REPEAT_WINDOW  = 5;   // track last N messages
+  const REPEAT_LOCK_AT = 3;   // lock after this many same messages
+  const SHORT_LOCK_AT  = 2;   // lock after this many same short messages
+  let messageHistory   = [];  // stores normalized recent messages
+  let shortWarnShown   = false; // shown warning for short message once
+
+  function normalizeMsg(text) {
+    return text.toLowerCase().trim().replace(/\s+/g, ' ');
+  }
+
+  function similarity(a, b) {
+    if (!a || !b) return 0;
+    const longer  = Math.max(a.length, b.length);
+    const shorter = Math.min(a.length, b.length);
+    if (longer === 0) return 1;
+    let matches = 0;
+    for (let i = 0; i < shorter; i++) {
+      if (a[i] === b[i]) matches++;
+    }
+    return matches / longer;
+  }
+
+  function isRepetitive(text) {
+    const normalized = normalizeMsg(text);
+
+    // Single / very short message (1-2 chars)
+    if (normalized.length <= 2) {
+      const shortMatches = messageHistory.filter(m => m === normalized).length;
+      if (shortMatches >= SHORT_LOCK_AT) {
+        return { lock: true, reason: 'short' };
+      }
+      // Warn on first short message (but don't lock yet)
+      if (!shortWarnShown) {
+        shortWarnShown = true;
+        return { lock: false, warn: true };
+      }
+    }
+
+    // Exact repetition
+    const exactCount = messageHistory.filter(m => m === normalized).length;
+    if (exactCount >= REPEAT_LOCK_AT - 1) {
+      return { lock: true, reason: 'exact' };
+    }
+
+    // Near-identical (85% similar)
+    const similarCount = messageHistory.filter(m =>
+      similarity(normalized, m) >= 0.85 && normalized !== m
+    ).length;
+    if (similarCount >= 2) {
+      return { lock: true, reason: 'similar' };
+    }
+
+    // Update history
+    messageHistory.push(normalized);
+    if (messageHistory.length > REPEAT_WINDOW) {
+      messageHistory = messageHistory.slice(-REPEAT_WINDOW);
+    }
+
+    return { lock: false };
+  }
+
+  let history    = [];
+  let isOpen     = false;
+  let isLoading  = false;
   let chatLocked = false;
 
-  const btn = document.getElementById('mia-widget-btn');
-  const panel = document.getElementById('mia-widget-panel');
-  const msgs = document.getElementById('mia-messages');
-  const input = document.getElementById('mia-input');
+  const btn     = document.getElementById('mia-widget-btn');
+  const panel   = document.getElementById('mia-widget-panel');
+  const msgs    = document.getElementById('mia-messages');
+  const input   = document.getElementById('mia-input');
   const sendBtn = document.getElementById('mia-send');
+
+  // ── New Chat button ──
+  const header = document.getElementById('mia-panel-header');
+  if (header) {
+    const newChatBtn = document.createElement('button');
+    newChatBtn.id = 'mia-new-chat';
+    newChatBtn.title = 'Start a new conversation';
+    newChatBtn.textContent = '🔄';
+    newChatBtn.style.cssText = `
+      background:none;border:none;cursor:pointer;
+      font-size:16px;opacity:0.45;transition:opacity .2s;
+      padding:2px 4px;margin-left:auto;flex-shrink:0;
+    `;
+    newChatBtn.onmouseover = () => newChatBtn.style.opacity = '1';
+    newChatBtn.onmouseout  = () => newChatBtn.style.opacity = '0.45';
+    newChatBtn.addEventListener('click', resetChat);
+    const dot = document.getElementById('mia-online-dot');
+    if (dot) header.insertBefore(newChatBtn, dot);
+    else header.appendChild(newChatBtn);
+  }
+
+  function lockChat(message) {
+    chatLocked = true;
+    input.disabled    = true;
+    sendBtn.disabled  = true;
+    input.placeholder = '⛔ Chat locked. Refresh to unlock.';
+    const footer = document.getElementById('mia-footer-note');
+    if (footer) footer.textContent = '⚠️ Locked · Refresh to unlock';
+    addMessage('bot', message);
+  }
+
+  function resetChat() {
+    if (isLoading) return;
+    history        = [];
+    messageHistory = [];
+    shortWarnShown = false;
+    chatLocked     = false;
+    input.disabled    = false;
+    sendBtn.disabled  = false;
+    input.placeholder = 'Ask me anything...';
+    const footer = document.getElementById('mia-footer-note');
+    if (footer) footer.textContent = 'MIA AI • Powered by MIA Official';
+    msgs.innerHTML = '';
+    addMessage('bot', '🔄 Chat cleared! Hey! 👋 I\'m <strong>MIA Assistant</strong>. Ask me anything — I\'m here to help!');
+  }
 
   btn.addEventListener('click', () => {
     isOpen = !isOpen;
@@ -618,18 +749,36 @@ updateUI();
 
   async function sendMessage() {
     if (chatLocked) return;
-
     const text = input.value.trim();
     if (!text || isLoading) return;
 
-    // ── Lock if message too long ──
+    // ── Frontend: message too long ──
     if (text.length > 600) {
-      chatLocked = true;
-      input.disabled    = true;
-      sendBtn.disabled  = true;
-      input.placeholder = '⛔ Chat locked – message too long. Refresh to unlock.';
-      document.getElementById('mia-footer-note').textContent = '⚠️ Locked · Refresh to unlock';
-      addMessage('bot', '⛔ **Chat locked** — your message was too long. Please keep messages under 600 characters. Refresh the page to unlock. 🔄');
+      lockChat('⛔ <strong>Chat locked</strong> — your message was too long. Keep messages under 600 characters. Refresh to unlock. 🔄');
+      return;
+    }
+
+    // ── Frontend: swear / NSFW ──
+    if (isBadMessage(text)) {
+      lockChat('⛔ <strong>Chat locked</strong> — swearing, NSFW content, and rude behavior are not allowed. Refresh to unlock. 🔄');
+      return;
+    }
+
+    // ── Frontend: repetition check ──
+    const repCheck = isRepetitive(text);
+    if (repCheck.warn) {
+      // Just show a gentle warning — don't lock yet
+      addMessage('bot', '💡 Tip: Try asking a proper question! Short or single-character messages may get limited. 😊');
+      input.value = '';
+      input.style.height = 'auto';
+      return;
+    }
+    if (repCheck.lock) {
+      if (repCheck.reason === 'short') {
+        lockChat('⛔ <strong>Chat locked</strong> — please type actual questions, not single characters. Refresh to unlock. 🔄');
+      } else {
+        lockChat('⛔ <strong>Chat locked</strong> — you\'re sending the same message too many times. Ask something new, or refresh to unlock. 🔄');
+      }
       return;
     }
 
@@ -647,27 +796,21 @@ updateUI();
         headers: {
           'Content-Type': 'application/json',
           'x-user-token': token,
-          'x-user-fp': fingerprint
+          'x-user-fp':    fingerprint
         },
         body: JSON.stringify({
           message: text,
           history: history.slice(0, -1),
-          source: SOURCE
+          source:  SOURCE
         })
       });
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
-      // ⛔ SPAM LOCK – disable chat permanently until refresh
       if (data.spam) {
-        chatLocked = true;
-        input.disabled = true;
-        sendBtn.disabled = true;
-        input.placeholder = '⛔ Chat locked – spam detected. Please refresh the page.';
-        document.getElementById('mia-footer-note').textContent = '⚠️ Locked · Refresh to unlock';
         typing.remove();
-        addMessage('bot', data.response || '⛔ Chatting locked – spam was detected. If you believe this is a mistake, kindly refresh the page.');
+        lockChat(data.response || '⛔ Chat locked. Refresh the page to unlock. 🔄');
         setLoading(false);
         return;
       }
@@ -680,7 +823,7 @@ updateUI();
     } catch (err) {
       typing.remove();
       addMessage('bot', '⚠️ Something went wrong. Please try again in a moment.');
-      console.error(err);
+      console.error('[MIA Widget]', err);
     } finally {
       setLoading(false);
       input.focus();
@@ -711,12 +854,7 @@ updateUI();
   }
 
   function scrollToBottom() { msgs.scrollTop = msgs.scrollHeight; }
-
-  function setLoading(s) {
-    isLoading = s;
-    input.disabled = s;
-    sendBtn.disabled = s;
-  }
+  function setLoading(s) { isLoading = s; input.disabled = s; sendBtn.disabled = s; }
 })();
 </script>
 </body>
