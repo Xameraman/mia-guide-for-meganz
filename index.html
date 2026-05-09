@@ -577,315 +577,348 @@ Sub2Unlock 'sub2unlock-guide'
 <!-- ══════════════════ MIA WIDGET JS (v14 – swear filter, new chat, complexity routing) ══════════════════ -->
 <script>
 (function () {
-  const API_URL = 'https://xameraman5022-mia-assistant.hf.space/chat';
-  const SOURCE  = 'mega-guide'; // MEGA.nz-Specific Knowledge
+  const API_URL    = 'https://xameraman5022-mia-assistant.hf.space/chat';
+  const STATUS_URL = 'https://xameraman5022-mia-assistant.hf.space/status';
+  const SOURCE     = 'mega-guide'; // ← change per page
 
-  // ── Persistent token ──
+  // ── Token ──
   let token = localStorage.getItem('mia_token');
-  if (!token) {
-    token = crypto.randomUUID();
-    localStorage.setItem('mia_token', token);
-  }
+  if (!token) { token = crypto.randomUUID(); localStorage.setItem('mia_token', token); }
 
-  // ── Device fingerprint ──
+  // ── Fingerprint ──
   const fingerprint =
-    navigator.userAgent + "_" +
-    screen.width + "x" + screen.height + "_" +
+    navigator.userAgent + "_" + screen.width + "x" + screen.height + "_" +
     Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  // ── Frontend bad word list ──
-  const BAD_WORDS = [
-    "fuck", "f*ck", "fck", "fuk", "fuq", "fvck",
-    "shit", "sh1t", "sh*t", "sht",
-    "bitch", "b*tch", "btch", "biatch",
-    "bastard", "cunt", "c*nt",
-    "dick", "d*ck", "cock", "c*ck",
-    "pussy", "p*ssy", "piss", "p*ss",
-    "whore", "wh*re", "slut", "sl*t",
-    "retard", "retarded",
-    "i will kill", "i'll kill", "gonna kill",
-    "i hate you", "hate you",
-    "shut up", "stfu",
-    "go die", "kys", "kill yourself",
-    "you suck", "sucks ass",
-    "useless bot", "stupid bot", "dumb bot",
-    "garbage bot", "trash bot", "worst bot",
-    "useless ai", "stupid ai", "dumb ai",
-    "this is trash", "this is garbage",
-    "you're trash", "you're garbage", "you're useless",
-    "you're stupid", "you're dumb", "you're an idiot",
-    "you are trash", "you are garbage", "you are useless",
-    "you are stupid", "you are dumb", "you are an idiot",
-    "nsfw", "porn", "pornography", "xxx", "nude", "naked",
-    "hentai", "lewd", "explicit", "erotic",
-    "onlyfans", "fetish",
-    "gore", "self harm", "self-harm",
-    "suicide method", "how to kill", "how to make bomb",
-  ];
+  const HEADERS = {
+    'Content-Type': 'application/json',
+    'x-user-token': token,
+    'x-user-fp':    fingerprint
+  };
 
+  // ── Bad word list ──
+  const BAD_WORDS = [
+    "fuck","f*ck","fck","fuk","fuq","fvck",
+    "shit","sh1t","sh*t","sht",
+    "bitch","b*tch","btch","biatch",
+    "bastard","cunt","c*nt",
+    "dick","d*ck","cock","c*ck",
+    "pussy","p*ssy","piss","p*ss",
+    "whore","wh*re","slut","sl*t",
+    "retard","retarded",
+    "i will kill","i'll kill","gonna kill",
+    "i hate you","hate you",
+    "shut up","stfu",
+    "go die","kys","kill yourself",
+    "you suck","sucks ass",
+    "useless bot","stupid bot","dumb bot",
+    "garbage bot","trash bot","worst bot",
+    "useless ai","stupid ai","dumb ai",
+    "this is trash","this is garbage",
+    "you're trash","you're garbage","you're useless",
+    "you're stupid","you're dumb","you're an idiot",
+    "you are trash","you are garbage","you are useless",
+    "you are stupid","you are dumb","you are an idiot",
+    "nsfw","porn","pornography","xxx","nude","naked",
+    "hentai","lewd","explicit","erotic","onlyfans","fetish",
+    "gore","self harm","self-harm",
+    "suicide method","how to kill","how to make bomb",
+  ];
   const MULTI_WORD_BAD = BAD_WORDS.filter(w => w.includes(" "));
   const SINGLE_BAD     = BAD_WORDS.filter(w => !w.includes(" "));
 
   function isBadMessage(text) {
     const lowered = text.toLowerCase();
-    for (const phrase of MULTI_WORD_BAD) {
-      if (lowered.includes(phrase)) return true;
-    }
-    const tokens         = new Set(lowered.match(/[a-z0-9*]+/g) || []);
-    const collapsed      = lowered.replace(/\s+/g, '');
-    const collapsedTokens = new Set(collapsed.match(/[a-z0-9*]+/g) || []);
-    for (const word of SINGLE_BAD) {
-      if (tokens.has(word) || collapsedTokens.has(word)) return true;
-    }
+    for (const p of MULTI_WORD_BAD) { if (lowered.includes(p)) return true; }
+    const tokens    = new Set(lowered.match(/[a-z0-9*]+/g) || []);
+    const collapsed = new Set(lowered.replace(/\s+/g,'').match(/[a-z0-9*]+/g) || []);
+    for (const w of SINGLE_BAD) { if (tokens.has(w) || collapsed.has(w)) return true; }
     return false;
   }
 
-  // ── Frontend repetition tracking ──
-  const REPEAT_WINDOW  = 5;   // track last N messages
-  const REPEAT_LOCK_AT = 3;   // lock after this many same messages
-  const SHORT_LOCK_AT  = 2;   // lock after this many same short messages
-  let messageHistory   = [];  // stores normalized recent messages
-  let shortWarnShown   = false; // shown warning for short message once
+  // ── Frontend repetition ──
+  const REPEAT_WIN   = 5;
+  const REPEAT_AT    = 3;
+  const SHORT_AT     = 2;
+  const TIME_WIN_MS  = 60000;
+  let msgHistory     = [];
+  let shortWarnShown = false;
 
-  function normalizeMsg(text) {
-    return text.toLowerCase().trim().replace(/\s+/g, ' ');
+  function normMsg(t) { return t.toLowerCase().trim().replace(/\s+/g,' '); }
+  function simil(a,b) {
+    if(!a||!b) return 0;
+    const L=Math.max(a.length,b.length), S=Math.min(a.length,b.length);
+    if(!L) return 1;
+    let m=0; for(let i=0;i<S;i++) if(a[i]===b[i]) m++;
+    return m/L;
+  }
+  function checkRepetitive(text) {
+    const norm=normMsg(text), now=Date.now();
+    msgHistory = msgHistory.filter(e=>now-e.t<=TIME_WIN_MS);
+    if(norm.length<=2){
+      const sc=msgHistory.filter(e=>e.m===norm).length;
+      if(sc>=SHORT_AT) return {lock:true,reason:'short'};
+      if(!shortWarnShown){shortWarnShown=true;return{lock:false,warn:true};}
+    }
+    const ec=msgHistory.filter(e=>e.m===norm).length;
+    if(ec>=REPEAT_AT-1) return {lock:true,reason:'exact'};
+    const sc=msgHistory.filter(e=>simil(norm,e.m)>=0.85&&norm!==e.m).length;
+    if(sc>=2) return {lock:true,reason:'similar'};
+    msgHistory.push({m:norm,t:now});
+    if(msgHistory.length>REPEAT_WIN) msgHistory=msgHistory.slice(-REPEAT_WIN);
+    return {lock:false};
   }
 
-  function similarity(a, b) {
-    if (!a || !b) return 0;
-    const longer  = Math.max(a.length, b.length);
-    const shorter = Math.min(a.length, b.length);
-    if (longer === 0) return 1;
-    let matches = 0;
-    for (let i = 0; i < shorter; i++) {
-      if (a[i] === b[i]) matches++;
-    }
-    return matches / longer;
-  }
-
-  function isRepetitive(text) {
-    const normalized = normalizeMsg(text);
-
-    // Single / very short message (1-2 chars)
-    if (normalized.length <= 2) {
-      const shortMatches = messageHistory.filter(m => m === normalized).length;
-      if (shortMatches >= SHORT_LOCK_AT) {
-        return { lock: true, reason: 'short' };
-      }
-      // Warn on first short message (but don't lock yet)
-      if (!shortWarnShown) {
-        shortWarnShown = true;
-        return { lock: false, warn: true };
-      }
-    }
-
-    // Exact repetition
-    const exactCount = messageHistory.filter(m => m === normalized).length;
-    if (exactCount >= REPEAT_LOCK_AT - 1) {
-      return { lock: true, reason: 'exact' };
-    }
-
-    // Near-identical (85% similar)
-    const similarCount = messageHistory.filter(m =>
-      similarity(normalized, m) >= 0.85 && normalized !== m
-    ).length;
-    if (similarCount >= 2) {
-      return { lock: true, reason: 'similar' };
-    }
-
-    // Update history
-    messageHistory.push(normalized);
-    if (messageHistory.length > REPEAT_WINDOW) {
-      messageHistory = messageHistory.slice(-REPEAT_WINDOW);
-    }
-
-    return { lock: false };
-  }
-
-  let history    = [];
-  let isOpen     = false;
-  let isLoading  = false;
-  let chatLocked = false;
+  // ── State ──
+  let history      = [];
+  let isOpen       = false;
+  let isLoading    = false;
+  let chatLocked   = false;
+  let countdownInt = null;
 
   const btn     = document.getElementById('mia-widget-btn');
   const panel   = document.getElementById('mia-widget-panel');
   const msgs    = document.getElementById('mia-messages');
   const input   = document.getElementById('mia-input');
   const sendBtn = document.getElementById('mia-send');
+  const footer  = document.getElementById('mia-footer-note');
+
+  // ── Global slow mode banner ──
+  let slowBanner = null;
+  function showSlowBanner(seconds) {
+    if (slowBanner) return;
+    slowBanner = document.createElement('div');
+    slowBanner.style.cssText = `
+      background:rgba(251,191,36,0.12);border-bottom:1px solid rgba(251,191,36,0.3);
+      color:#fbbf24;font-size:11px;font-weight:700;text-align:center;
+      padding:6px 10px;flex-shrink:0;
+    `;
+    slowBanner.textContent = `🛡️ High load detected — slow mode active (${seconds}s)`;
+    panel.insertBefore(slowBanner, msgs);
+  }
+  function hideSlowBanner() {
+    if (slowBanner) { slowBanner.remove(); slowBanner = null; }
+  }
 
   // ── New Chat button ──
   const header = document.getElementById('mia-panel-header');
   if (header) {
-    const newChatBtn = document.createElement('button');
-    newChatBtn.id = 'mia-new-chat';
-    newChatBtn.title = 'Start a new conversation';
-    newChatBtn.textContent = '🔄';
-    newChatBtn.style.cssText = `
-      background:none;border:none;cursor:pointer;
-      font-size:16px;opacity:0.45;transition:opacity .2s;
-      padding:2px 4px;margin-left:auto;flex-shrink:0;
-    `;
-    newChatBtn.onmouseover = () => newChatBtn.style.opacity = '1';
-    newChatBtn.onmouseout  = () => newChatBtn.style.opacity = '0.45';
-    newChatBtn.addEventListener('click', resetChat);
+    const ncBtn = document.createElement('button');
+    ncBtn.title = 'New conversation';
+    ncBtn.textContent = '🔄';
+    ncBtn.style.cssText = `background:none;border:none;cursor:pointer;font-size:16px;
+      opacity:0.45;transition:opacity .2s;padding:2px 4px;margin-left:auto;flex-shrink:0;`;
+    ncBtn.onmouseover = ()=>ncBtn.style.opacity='1';
+    ncBtn.onmouseout  = ()=>ncBtn.style.opacity='0.45';
+    ncBtn.addEventListener('click', resetChat);
     const dot = document.getElementById('mia-online-dot');
-    if (dot) header.insertBefore(newChatBtn, dot);
-    else header.appendChild(newChatBtn);
+    if(dot) header.insertBefore(ncBtn,dot); else header.appendChild(ncBtn);
   }
 
-  function lockChat(message) {
-    chatLocked = true;
-    input.disabled    = true;
-    sendBtn.disabled  = true;
-    input.placeholder = '⛔ Chat locked. Refresh to unlock.';
-    const footer = document.getElementById('mia-footer-note');
-    if (footer) footer.textContent = '⚠️ Locked · Refresh to unlock';
+  // ── Countdown ──
+  function startCountdown(seconds) {
+    clearInterval(countdownInt);
+    let rem = seconds;
+    function tick() {
+      if(rem<=0){
+        clearInterval(countdownInt);
+        checkStatusOnLoad();
+        return;
+      }
+      const m=Math.floor(rem/60), s=rem%60;
+      if(footer) footer.textContent = m>0 ? `⏳ Locked ${m}m ${s}s` : `⏳ Locked ${s}s`;
+      rem--;
+    }
+    tick();
+    countdownInt = setInterval(tick,1000);
+  }
+
+  function lockChat(message, unlockIn) {
+    clearInterval(countdownInt);
+    chatLocked=true; input.disabled=true; sendBtn.disabled=true;
+    input.placeholder='⛔ Locked. Wait for timer.';
     addMessage('bot', message);
+    if(unlockIn>0) startCountdown(unlockIn);
+    else if(footer) footer.textContent='⚠️ Locked · Refresh to unlock';
+  }
+
+  function unlockChat() {
+    clearInterval(countdownInt);
+    chatLocked=false; input.disabled=false; sendBtn.disabled=false;
+    input.placeholder='Ask me anything...';
+    hideSlowBanner();
+    if(footer) footer.textContent='MIA AI • Powered by MIA Official';
+    addMessage('bot','✅ Lock lifted! You can send messages again. Please keep it respectful. 😊');
   }
 
   function resetChat() {
-    if (isLoading) return;
-    history        = [];
-    messageHistory = [];
-    shortWarnShown = false;
-    chatLocked     = false;
-    input.disabled    = false;
-    sendBtn.disabled  = false;
-    input.placeholder = 'Ask me anything...';
-    const footer = document.getElementById('mia-footer-note');
-    if (footer) footer.textContent = 'MIA AI • Powered by MIA Official';
-    msgs.innerHTML = '';
-    addMessage('bot', '🔄 Chat cleared! Hey! 👋 I\'m <strong>MIA Assistant</strong>. Ask me anything — I\'m here to help!');
+    if(isLoading) return;
+    clearInterval(countdownInt);
+    history=[]; msgHistory=[]; shortWarnShown=false; chatLocked=false;
+    input.disabled=false; sendBtn.disabled=false;
+    input.placeholder='Ask me anything...';
+    hideSlowBanner();
+    if(footer) footer.textContent='MIA AI • Powered by MIA Official';
+    msgs.innerHTML='';
+    addMessage('bot','🔄 Chat cleared! Hey! 👋 I\'m <strong>MIA Assistant</strong>. Ask me anything — I\'m here to help!');
   }
 
-  btn.addEventListener('click', () => {
-    isOpen = !isOpen;
-    panel.classList.toggle('mia-open', isOpen);
-    btn.textContent = isOpen ? '✕' : '🤖';
-    if (isOpen) { input.focus(); scrollToBottom(); }
+  // ── Check server status on load ──
+  async function checkStatusOnLoad() {
+    try {
+      const res = await fetch(STATUS_URL, {headers: HEADERS});
+      if(!res.ok) return;
+      const data = await res.json();
+
+      // Global slow mode
+      if(data.slow_mode && data.slow_until>0) {
+        showSlowBanner(data.slow_until);
+      } else {
+        hideSlowBanner();
+      }
+
+      // User lock
+      if(data.locked && data.unlock_in>0) {
+        chatLocked=true; input.disabled=true; sendBtn.disabled=true;
+        input.placeholder='⛔ Locked. Wait for timer.';
+        startCountdown(data.unlock_in);
+        if(isOpen) {
+          addMessage('bot',`⛔ You are still locked — ${data.unlock_in}s remaining. Refreshing won't bypass this.`);
+        }
+      } else if(chatLocked && !data.locked) {
+        unlockChat();
+      }
+    } catch(e) { /* silent */ }
+  }
+
+  checkStatusOnLoad();
+
+  btn.addEventListener('click', ()=>{
+    isOpen=!isOpen;
+    panel.classList.toggle('mia-open',isOpen);
+    btn.textContent=isOpen?'✕':'🤖';
+    if(isOpen){ input.focus(); scrollToBottom(); checkStatusOnLoad(); }
   });
 
-  input.addEventListener('input', () => {
-    input.style.height = 'auto';
-    input.style.height = Math.min(input.scrollHeight, 80) + 'px';
+  input.addEventListener('input',()=>{
+    input.style.height='auto';
+    input.style.height=Math.min(input.scrollHeight,80)+'px';
   });
 
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
+  input.addEventListener('keydown',(e)=>{
+    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
   });
-  sendBtn.addEventListener('click', sendMessage);
+  sendBtn.addEventListener('click',sendMessage);
 
   async function sendMessage() {
-    if (chatLocked) return;
-    const text = input.value.trim();
-    if (!text || isLoading) return;
+    if(chatLocked) return;
+    const text=input.value.trim();
+    if(!text||isLoading) return;
 
-    // ── Frontend: message too long ──
-    if (text.length > 600) {
-      lockChat('⛔ <strong>Chat locked</strong> — your message was too long. Keep messages under 600 characters. Refresh to unlock. 🔄');
+    // Length check
+    if(text.length>600){
+      lockChat('⛔ <strong>Chat locked</strong> — message too long. Keep under 600 chars. 🔄',15);
       return;
     }
 
-    // ── Frontend: swear / NSFW ──
-    if (isBadMessage(text)) {
-      lockChat('⛔ <strong>Chat locked</strong> — swearing, NSFW content, and rude behavior are not allowed. Refresh to unlock. 🔄');
+    // Bad word check
+    if(isBadMessage(text)){
+      lockChat('⛔ <strong>Chat locked</strong> — swearing, NSFW, and rude behavior are not allowed. 🔄',15);
       return;
     }
 
-    // ── Frontend: repetition check ──
-    const repCheck = isRepetitive(text);
-    if (repCheck.warn) {
-      // Just show a gentle warning — don't lock yet
-      addMessage('bot', '💡 Tip: Try asking a proper question! Short or single-character messages may get limited. 😊');
-      input.value = '';
-      input.style.height = 'auto';
-      return;
+    // Repetition check
+    const rep=checkRepetitive(text);
+    if(rep.warn){
+      addMessage('bot','💡 Please ask a proper question! Very short messages may be limited. 😊');
+      input.value=''; input.style.height='auto'; return;
     }
-    if (repCheck.lock) {
-      if (repCheck.reason === 'short') {
-        lockChat('⛔ <strong>Chat locked</strong> — please type actual questions, not single characters. Refresh to unlock. 🔄');
-      } else {
-        lockChat('⛔ <strong>Chat locked</strong> — you\'re sending the same message too many times. Ask something new, or refresh to unlock. 🔄');
-      }
+    if(rep.lock){
+      lockChat(
+        rep.reason==='short'
+          ? '⛔ <strong>Chat locked</strong> — please type real questions. 🔄'
+          : '⛔ <strong>Chat locked</strong> — stop repeating the same message. Ask something new. 🔄',
+        15
+      );
       return;
     }
 
-    addMessage('user', text);
-    history.push({ role: 'user', content: text });
-    input.value = '';
-    input.style.height = 'auto';
+    addMessage('user',text);
+    history.push({role:'user',content:text});
+    input.value=''; input.style.height='auto';
 
-    const typing = addTyping();
+    const typing=addTyping();
     setLoading(true);
 
     try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-token': token,
-          'x-user-fp':    fingerprint
-        },
-        body: JSON.stringify({
-          message: text,
-          history: history.slice(0, -1),
-          source:  SOURCE
-        })
+      const res = await fetch(API_URL,{
+        method:'POST', headers:HEADERS,
+        body:JSON.stringify({message:text,history:history.slice(0,-1),source:SOURCE})
       });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data=await res.json();
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-
-      if (data.spam) {
+      // Server-side timed lock
+      if(data.locked){
         typing.remove();
-        lockChat(data.response || '⛔ Chat locked. Refresh the page to unlock. 🔄');
-        setLoading(false);
-        return;
+        lockChat(data.response||'⛔ You have been locked. Please wait.',data.unlock_in||15);
+        setLoading(false); return;
       }
 
-      const reply = data.response || 'Sorry, I didn\'t get a response. Please try again.';
-      history.push({ role: 'assistant', content: reply });
-      typing.remove();
-      addMessage('bot', reply);
+      // Server slow mode
+      if(data.slow_mode){
+        typing.remove();
+        showSlowBanner(data.unlock_in||60);
+        addMessage('bot',data.response||'🛡️ MIA is under high load. Please wait a moment.');
+        setLoading(false); return;
+      }
 
-    } catch (err) {
+      // Spam lock (permanent until refresh)
+      if(data.spam){
+        typing.remove();
+        lockChat(data.response||'⛔ Chat locked. Refresh to unlock.',0);
+        setLoading(false); return;
+      }
+
+      const reply=data.response||'Sorry, no response. Please try again.';
+      history.push({role:'assistant',content:reply});
       typing.remove();
-      addMessage('bot', '⚠️ Something went wrong. Please try again in a moment.');
-      console.error('[MIA Widget]', err);
+      addMessage('bot',reply);
+
+    } catch(err){
+      typing.remove();
+      addMessage('bot','⚠️ Something went wrong. Please try again in a moment.');
+      console.error('[MIA Widget]',err);
     } finally {
-      setLoading(false);
-      input.focus();
+      setLoading(false); input.focus();
     }
   }
 
-  function addMessage(role, text) {
-    const div = document.createElement('div');
-    div.className = `mia-msg ${role}`;
-    div.innerHTML = text
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`(.*?)`/g, '<code>$1</code>')
-      .replace(/\n/g, '<br>');
+  function addMessage(role,text){
+    const div=document.createElement('div');
+    div.className=`mia-msg ${role}`;
+    div.innerHTML=text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g,'<em>$1</em>')
+      .replace(/`(.*?)`/g,'<code>$1</code>')
+      .replace(/\n/g,'<br>');
     msgs.appendChild(div);
     scrollToBottom();
     return div;
   }
 
-  function addTyping() {
-    const div = document.createElement('div');
-    div.className = 'mia-typing';
-    div.innerHTML = '<div class="mia-dot"></div><div class="mia-dot"></div><div class="mia-dot"></div>';
+  function addTyping(){
+    const div=document.createElement('div');
+    div.className='mia-typing';
+    div.innerHTML='<div class="mia-dot"></div><div class="mia-dot"></div><div class="mia-dot"></div>';
     msgs.appendChild(div);
     scrollToBottom();
     return div;
   }
 
-  function scrollToBottom() { msgs.scrollTop = msgs.scrollHeight; }
-  function setLoading(s) { isLoading = s; input.disabled = s; sendBtn.disabled = s; }
+  function scrollToBottom(){msgs.scrollTop=msgs.scrollHeight;}
+  function setLoading(s){isLoading=s;input.disabled=s;sendBtn.disabled=s;}
 })();
 </script>
 </body>
